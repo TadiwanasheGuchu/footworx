@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { brands, products } from "@/data/products";
+import { getProducts } from "@/lib/catalog";
 import { ProductCard } from "@/components/ProductCard";
 
 export const metadata: Metadata = { title: "Shop all shoes" };
@@ -11,6 +11,8 @@ type Search = { searchParams: Promise<{ brand?: string; category?: string }> };
 
 export default async function ShopPage({ searchParams }: Search) {
   const { brand, category } = await searchParams;
+  const products = await getProducts();
+  const brands = [...new Set(products.map((p) => p.brand))].sort();
   const list = products.filter((p) => (!brand || p.brand === brand) && (!category || p.category === category));
 
   const href = (next: { brand?: string; category?: string }) => {

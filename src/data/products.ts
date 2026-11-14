@@ -19,13 +19,14 @@ export type Colorway = {
 
 export type Product = {
   slug: string;
-  brand: "Hoka" | "Joma";
+  brand: string;
   name: string;
   category: "Running" | "Football" | "Casual" | "Trail";
-  gender: "Men" | "Women" | "Unisex";
+  gender: "Men" | "Women" | "Unisex" | "Kids";
   price: number;
   description: string;
   isNew?: boolean;
+  featured?: boolean;
   salePrice?: number;
   colorways: Colorway[];
 };
@@ -120,8 +121,3 @@ export const products: Product[] = [
   },
 ];
 
-export function getProduct(slug: string) {
-  return products.find((p) => p.slug === slug);
-}
-
-export const brands = ["Hoka", "Joma"] as const;

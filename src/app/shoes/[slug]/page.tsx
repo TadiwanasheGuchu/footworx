@@ -1,26 +1,29 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProduct, products } from "@/data/products";
+import { getProduct, getProducts } from "@/lib/catalog";
 import { ShoeShowcase } from "@/components/ShoeShowcase";
 import { ProductCard } from "@/components/ProductCard";
 
 type Params = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return (await getProducts()).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
   return { title: product ? `${product.brand} ${product.name}` : "Shoe not found" };
 }
 
 export default async function ShoePage({ params }: Params) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
   if (!product) notFound();
 
+  const products = await getProducts();
   const related = products.filter((p) => p.slug !== product.slug && (p.brand === product.brand || p.category === product.category)).slice(0, 4);
 
   return (

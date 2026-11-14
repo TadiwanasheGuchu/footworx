@@ -1,12 +1,14 @@
 import Link from "next/link";
-import { products } from "@/data/products";
+import { getFeatured, getProducts } from "@/lib/catalog";
 import { ShoeShowcase } from "@/components/ShoeShowcase";
 import { ProductCard } from "@/components/ProductCard";
 import { site, whatsappLink } from "@/lib/site";
 
-export default function Home() {
-  const featured = products[0];
-  const newArrivals = products.slice(0, 4);
+export const revalidate = 60;
+
+export default async function Home() {
+  const [featured, products] = await Promise.all([getFeatured(), getProducts()]);
+  const newArrivals = [...products].sort((a, b) => Number(!!b.isNew) - Number(!!a.isNew)).slice(0, 4);
 
   return (
     <>

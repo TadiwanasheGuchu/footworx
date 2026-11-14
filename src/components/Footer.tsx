@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="mt-8 bg-tile">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-8 md:grid-cols-3">
         <div className="flex flex-col gap-4">
-          <Logo height={52} />
+          <Logo height={64} />
           <p className="max-w-xs text-steel">{site.tagline}</p>
         </div>
         <div className="flex flex-col gap-2">

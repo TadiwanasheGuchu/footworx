@@ -27,8 +27,9 @@ export function Logo({
       width={width}
       height={height}
       priority={priority}
-      className={className}
-      style={{ height, width: "auto" }}
+      // self-start + shrink-0 stop flex layouts from stretching or squashing it
+      className={`block shrink-0 self-start object-contain ${className ?? ""}`}
+      style={{ height, width: "auto", maxWidth: "none" }}
     />
   );
 }

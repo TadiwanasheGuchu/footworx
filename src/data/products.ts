@@ -13,6 +13,8 @@ export type Colorway = {
   bg: string;
   // Path to a transparent product photo, once we have real images
   image?: string;
+  // Extra photos (other angles, sole, on foot) shown as a gallery on the shoe page
+  gallery?: { src: string; thumb: string }[];
   // EU sizes in stock for this colorway
   inStock: string[];
 };

@@ -24,6 +24,7 @@ type SanityProduct = {
     _key: string;
     name: string;
     imageUrl?: string | null;
+    gallery?: (string | null)[] | null;
     swatch: SanityColor;
     background: SanityColor;
     inStock?: string[] | null;
@@ -34,7 +35,7 @@ const query = `*[_type == "product" && defined(slug.current) && count(colorways)
   "slug": slug.current,
   "brand": brand->name,
   name, category, gender, price, salePrice, description, isNew, featured,
-  colorways[]{ _key, name, "imageUrl": image.asset->url, swatch, background, inStock }
+  colorways[]{ _key, name, "imageUrl": image.asset->url, "gallery": gallery[].asset->url, swatch, background, inStock }
 }`;
 
 
@@ -50,6 +51,9 @@ function toProduct(p: SanityProduct): Product {
       lace: isLight(swatch) ? "#0b1b2b" : "#ffffff",
       bg: c.background?.hex ?? "#e3f4ff",
       image: c.imageUrl ? `${c.imageUrl}?w=1400&fm=webp&q=85` : undefined,
+      gallery: (c.gallery ?? [])
+        .filter((u): u is string => !!u)
+        .map((u) => ({ src: `${u}?w=1600&fm=webp&q=85`, thumb: `${u}?w=240&h=240&fit=fillmax&bg=f1f4f6&fm=webp` })),
       inStock: c.inStock ?? [],
     };
   });

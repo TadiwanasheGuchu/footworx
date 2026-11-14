@@ -45,6 +45,14 @@ const colorway = defineArrayMember({
       options: { disableAlpha: true },
     }),
     defineField({
+      name: "gallery",
+      title: "More photos",
+      description: "Optional. Other angles, the sole, close-ups. Shown as a gallery on the shoe page. Drag to reorder.",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      options: { layout: "grid" },
+    }),
+    defineField({
       name: "inStock",
       title: "Sizes in stock (EU)",
       description: "Tick every size you have in this color",

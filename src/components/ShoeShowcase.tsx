@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import type { Product } from "@/data/products";
 import { formatPrice } from "@/lib/site";
 import { isLight } from "@/lib/color";
@@ -10,6 +10,7 @@ import { FloatingShoe } from "./FloatingShoe";
 import { ColorwayPicker } from "./ColorwayPicker";
 import { SizePicker } from "./SizePicker";
 import { BuyActions } from "./BuyActions";
+import { ShoeArt } from "./ShoeArt";
 
 type Props = {
   product: Product;
@@ -32,8 +33,40 @@ function Price({ product }: { product: Product }) {
   );
 }
 
+// Matches the light grey studio background of typical brand product photos
+const STUDIO_BG = "#f7f6f9";
+
+function Thumb({ on, label, onClick, bg, children }: { on: boolean; label: string; onClick: () => void; bg: string; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-pressed={on}
+      onClick={onClick}
+      className={`h-20 w-20 shrink-0 cursor-pointer overflow-hidden rounded-2xl p-1.5 transition-shadow sm:h-24 sm:w-24 ${
+        on ? "shadow-[0_0_0_2px_#0b1b2b]" : "shadow-[0_0_0_1px_#e3e8ec] hover:shadow-[0_0_0_2px_#5b6b7a]"
+      }`}
+      style={{ background: bg }}
+    >
+      {children}
+    </button>
+  );
+}
+
 /** Soft colored panel with the floating shoe; the color follows the selected colorway. */
-function ShoePanel({ product, bg, children, className }: { product: Product; bg: string; children: React.ReactNode; className?: string }) {
+function ShoePanel({
+  product,
+  bg,
+  children,
+  className,
+  hideBrand,
+}: {
+  product: Product;
+  bg: string;
+  children: React.ReactNode;
+  className?: string;
+  hideBrand?: boolean;
+}) {
   const dark = !isLight(bg);
   return (
     <motion.div
@@ -44,7 +77,7 @@ function ShoePanel({ product, bg, children, className }: { product: Product; bg:
     >
       <span
         aria-hidden
-        className={`display pointer-events-none absolute -right-4 top-2 select-none text-[30vw] leading-none md:text-[15vw] ${
+        className={`display pointer-events-none absolute -right-4 top-2 transition-opacity duration-300 ${hideBrand ? "opacity-0" : ""} select-none text-[30vw] leading-none md:text-[15vw] ${
           dark ? "text-white/[0.07]" : "text-white/60"
         }`}
       >
@@ -60,8 +93,12 @@ export function ShoeShowcase({ product, variant }: Props) {
   const [size, setSize] = useState<string | null>(null);
   const colorway = product.colorways.find((c) => c.id === colorId) ?? product.colorways[0];
 
+  // 0 = the floating shoe, 1+ = gallery photos
+  const [view, setView] = useState(0);
+
   const pickColor = (id: string) => {
     setColorId(id);
+    setView(0);
     const next = product.colorways.find((c) => c.id === id);
     if (size && next && !next.inStock.includes(size)) setSize(null);
   };
@@ -105,12 +142,57 @@ export function ShoeShowcase({ product, variant }: Props) {
     );
   }
 
+  const gallery = colorway.gallery ?? [];
+  const photo = view > 0 ? gallery[view - 1] : null;
+
   return (
     <section className="mx-auto grid max-w-7xl gap-8 px-4 pt-6 sm:px-8 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
-      <div className="lg:sticky lg:top-24 lg:self-start">
-        <ShoePanel product={product} bg={colorway.bg} className="flex aspect-[4/3] items-center px-6 sm:px-12">
-          <FloatingShoe colorway={colorway} label={label} className="relative w-full" />
+      <div className="flex flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
+        <ShoePanel
+          product={product}
+          bg={photo ? STUDIO_BG : colorway.bg}
+          className="flex aspect-[4/3] items-center justify-center"
+          hideBrand={!!photo}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {photo ? (
+              <motion.img
+                key={photo.src}
+                src={photo.src}
+                alt={`${label} in ${colorway.name}, photo ${view + 1}`}
+                className="relative h-full w-full object-contain"
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.25 }}
+              />
+            ) : (
+              <motion.div
+                key="float"
+                className="relative w-full px-6 sm:px-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <FloatingShoe colorway={colorway} label={label} className="w-full" />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </ShoePanel>
+        {gallery.length > 0 && (
+          <div className="-mx-1 flex gap-2 overflow-x-auto p-1" role="group" aria-label="Photos">
+            <Thumb on={view === 0} label="Main view" onClick={() => setView(0)} bg={colorway.bg}>
+              <ShoeArt colorway={colorway} className="h-full w-full object-contain" />
+            </Thumb>
+            {gallery.map((g, i) => (
+              <Thumb key={g.src} on={view === i + 1} label={`Photo ${i + 2}`} onClick={() => setView(i + 1)} bg={STUDIO_BG}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={g.thumb} alt="" className="h-full w-full object-contain" />
+              </Thumb>
+            ))}
+          </div>
+        )}
       </div>
       <div className="flex flex-col gap-7 lg:py-4">
         <div className="flex flex-col gap-3">

@@ -12,7 +12,15 @@ export const brand = defineType({
   type: "document",
   fields: [
     defineField({ name: "name", title: "Brand name", type: "string", validation: (r) => r.required() }),
+    defineField({
+      name: "logo",
+      title: "Logo",
+      description:
+        "Official logo from the brand or your supplier (dealer kit). Transparent PNG or SVG, dark logo for a white background. Shown in the moving 'Brands we stock' strip.",
+      type: "image",
+    }),
   ],
+  preview: { select: { title: "name", media: "logo" } },
 });
 
 const colorway = defineArrayMember({

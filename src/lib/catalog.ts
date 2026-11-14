@@ -129,6 +129,24 @@ export async function getFeatured() {
 
 export { productHref } from "./links";
 
+export type BrandInfo = { name: string; logo?: string };
+
+/** Brands with uploaded logos, from Sanity (name -> logo url) */
+export async function getBrandLogos(): Promise<Record<string, string>> {
+  if (!client) return {};
+  try {
+    const rows = await client.fetch<{ name: string; logo: string | null }[]>(
+      `*[_type == "brand" && defined(logo.asset)]{ name, "logo": logo.asset->url }`,
+      {},
+      { next: { revalidate: REVALIDATE } },
+    );
+    return Object.fromEntries(rows.filter((r) => r.logo).map((r) => [r.name.trim().toLowerCase(), r.logo as string]));
+  } catch (err) {
+    console.error("Sanity brand fetch failed", err);
+    return {};
+  }
+}
+
 export async function isSampleCatalogue() {
   return (await getProducts()) === sampleProducts;
 }

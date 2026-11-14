@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getFeatured, getProducts } from "@/lib/catalog";
+import { getBrandLogos, getFeatured, getProducts } from "@/lib/catalog";
+import { BrandMarquee } from "@/components/BrandMarquee";
 import { ShoeShowcase } from "@/components/ShoeShowcase";
 import { ProductCard } from "@/components/ProductCard";
 import { shortAddress, site, whatsappLink } from "@/lib/site";
@@ -15,7 +16,7 @@ const accessoryTiles = [
 ];
 
 export default async function Home() {
-  const [featured, products] = await Promise.all([getFeatured(), getProducts()]);
+  const [featured, products, logos] = await Promise.all([getFeatured(), getProducts(), getBrandLogos()]);
   const shoes = products.filter((p) => p.kind === "shoe");
   const accessories = products.filter((p) => p.kind === "accessory");
   const newArrivals = [...shoes].sort((a, b) => Number(!!b.isNew) - Number(!!a.isNew)).slice(0, 8);
@@ -102,29 +103,15 @@ export default async function Home() {
 
       <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-8">
         <h2 className="mb-5 text-3xl font-bold tracking-tight">Brands we stock</h2>
-        <div className="flex flex-wrap gap-2">
-          {site.brands.map((b) =>
-            inCatalogue.has(b.toLowerCase()) ? (
-              <Link
-                key={b}
-                href={`/shop?brand=${encodeURIComponent(b)}`}
-                className="rounded-full border border-line px-6 py-3 text-lg font-semibold hover:border-ink"
-              >
-                {b}
-              </Link>
-            ) : (
-              <a
-                key={b}
-                href={whatsappLink(`Hi Footworx, which ${b} products do you have in stock?`)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-line px-6 py-3 text-lg font-semibold hover:border-ink"
-              >
-                {b}
-              </a>
-            ),
-          )}
-        </div>
+      </section>
+      <section className="pb-12" aria-label="Brands we stock">
+        <BrandMarquee
+          brands={site.brands.map((b) => ({
+            name: b,
+            logo: logos[b.toLowerCase()],
+            inShop: inCatalogue.has(b.toLowerCase()),
+          }))}
+        />
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-8">

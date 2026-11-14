@@ -21,7 +21,7 @@ function Photo({ img, className, eager }: { img: StoryImage; className?: string;
       src={img.url}
       alt={img.alt}
       loading={eager ? "eager" : "lazy"}
-      className={`h-full w-full object-cover ${className ?? ""}`}
+      className={`absolute inset-0 h-full w-full object-cover ${className ?? ""}`}
       style={{ objectPosition: img.position }}
     />
   );
@@ -48,8 +48,8 @@ export function CategoryStory({ page, story }: { page: string; story: Story | nu
   const extras = story.images;
   return (
     <section className="mx-auto max-w-7xl px-4 pt-6 sm:px-8">
-      <div className={`grid gap-3 lg:h-[480px] ${extras.length ? "lg:grid-cols-[1.7fr_1fr]" : ""}`}>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-tile sm:aspect-[16/9] lg:aspect-auto">
+      <div className={`grid gap-3 lg:grid-rows-[480px] ${extras.length ? "lg:grid-cols-[1.7fr_1fr]" : ""}`}>
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-tile sm:aspect-[16/9] lg:aspect-auto lg:h-full">
           <Photo img={story.main} eager />
           {/* Darken the bottom so the white headline is always readable */}
           <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -64,21 +64,21 @@ export function CategoryStory({ page, story }: { page: string; story: Story | nu
             {/* Phones and tablets: swipe through the extra photos */}
             <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1 lg:hidden">
               {extras.map((img) => (
-                <div key={img.url} className="h-48 w-64 shrink-0 snap-start overflow-hidden rounded-3xl bg-tile sm:h-56 sm:w-80">
+                <div key={img.url} className="relative h-48 w-64 shrink-0 snap-start overflow-hidden rounded-3xl bg-tile sm:h-56 sm:w-80">
                   <Photo img={img} />
                 </div>
               ))}
             </div>
             {/* Desktop: a collage beside the main photo */}
             <div
-              className={`hidden gap-3 lg:grid ${
-                extras.length === 1 ? "grid-cols-1" : extras.length === 2 ? "grid-rows-2" : "grid-cols-2 grid-rows-2"
+              className={`hidden h-full min-h-0 gap-3 lg:grid ${
+                extras.length === 1 ? "grid-rows-1" : extras.length === 2 ? "grid-rows-2" : "grid-cols-2 grid-rows-2"
               }`}
             >
               {extras.map((img, i) => (
                 <div
                   key={img.url}
-                  className={`overflow-hidden rounded-3xl bg-tile ${extras.length === 3 && i === 0 ? "row-span-2" : ""}`}
+                  className={`relative min-h-0 overflow-hidden rounded-3xl bg-tile ${extras.length === 3 && i === 0 ? "row-span-2" : ""}`}
                 >
                   <Photo img={img} />
                 </div>

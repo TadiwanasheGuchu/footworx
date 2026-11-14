@@ -20,7 +20,7 @@ export const site = {
     { days: "Sat – Sun", time: "Closed" },
   ],
   // Brands Footworx stocks (shown on the home page even before they're in the catalogue)
-  brands: ["Hoka", "Brooks", "New Balance", "Saucony", "Mizuno", "Salomon", "Joma", "Hush Puppies"],
+  brands: ["Hoka", "Brooks", "New Balance", "Saucony", "Mizuno", "Salomon", "Joma", "Hush Puppies", "Shokz"],
 };
 
 export const shortAddress = "LERA Medical Centre, Hermes, Walvis Bay";

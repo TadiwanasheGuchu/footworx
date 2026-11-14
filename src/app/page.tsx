@@ -11,7 +11,7 @@ const categories = ["Running", "Trail", "Football", "Casual"];
 const accessoryTiles = [
   { category: "Insoles", text: "Support and comfort, matched to your foot assessment." },
   { category: "Socks", text: "Cushioned running socks that keep blisters away." },
-  { category: "Headphones", text: "Sport headphones that stay put on the run." },
+  { category: "Headphones", text: "Shokz open-ear headphones: hear the road while you run." },
 ];
 
 export default async function Home() {

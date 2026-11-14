@@ -7,7 +7,12 @@ Customers can buy online, order on WhatsApp, or reserve and collect in store.
 
 - **Logo:** white "FOOTWORX" wordmark with a footprint swoosh over the X, "NAMIBIA" underneath.
 - **Primary color:** bright sky blue, approximately `#38B6FF` (confirm exact value from the logo source file).
-- **Secondary:** white. Add a dark navy/charcoal for text and a warm accent for buttons and sale tags.
+- **Palette:** Footworx Blue `#38B6FF`, Ink Navy `#0B1B2B` (all text, including on blue), Cool White `#F4F7FA`
+  (page background, never cream/coffee), Dune Orange `#FF5A1F` (buy buttons and sale tags only, navy text),
+  Steel Grey `#5B6B7A` (secondary text), borders `#DDE4EA`.
+- **Font:** Archivo (condensed heavy for headlines, regular for body).
+- **Avoid:** coffee/beige backgrounds, purple gradients, glowing blobs, frosted glass, rows of icon cards,
+  emoji, "Elevate your stride"-style copy, fake stats and reviews, stock photos.
 - **Feel:** sporty, fresh, energetic. The blue suits the floating-shoe hero as a default background,
   shifting to each colorway's tone when a new color is picked.
 - **Needed:** logo as a transparent PNG or SVG (white and a dark version), not only on the blue square.
@@ -80,8 +85,8 @@ Orders are sent to staff by WhatsApp/email and recorded in Sanity.
 
 ## Build phases
 
-1. **Look and feel:** colors, fonts, floating-shoe style
-2. **Prototype:** home page + one shoe page with placeholder shoes
+1. ~~**Look and feel:** colors, fonts, floating-shoe style~~ (done: style board)
+2. ~~**Prototype:** home page + shoe pages with placeholder shoes~~ (done, plus shop and store pages)
 3. **Catalogue:** Sanity setup, shop page with filters, all shoe pages
 4. **Ordering:** WhatsApp ordering, collect in store, EFT
 5. **Launch:** Netlify hosting, domain, real photos

@@ -40,7 +40,7 @@ const colorway = defineArrayMember({
     defineField({
       name: "background",
       title: "Background color",
-      description: "Optional. The page background behind the shoe for this color. Keep it light.",
+      description: "Optional. The page background behind the shoe for this color. Text turns white automatically on dark colors.",
       type: "color",
       options: { disableAlpha: true },
     }),

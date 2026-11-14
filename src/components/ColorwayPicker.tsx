@@ -24,7 +24,7 @@ export function ColorwayPicker({ colorways, selectedId, onSelect }: Props) {
               aria-pressed={on}
               onClick={() => onSelect(c.id)}
               className={`h-12 w-12 cursor-pointer rounded-full border-[3px] border-white transition-shadow ${
-                on ? "shadow-[0_0_0_3px_#0b1b2b]" : "shadow-[0_0_0_1px_rgba(11,27,43,.25)] hover:shadow-[0_0_0_2px_#0b1b2b]"
+                on ? "shadow-[0_0_0_3px_currentColor]" : "shadow-[0_0_0_1px_rgba(128,128,128,.5)] hover:shadow-[0_0_0_2px_currentColor]"
               }`}
               style={{ background: c.upper }}
             />

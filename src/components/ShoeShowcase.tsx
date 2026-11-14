@@ -9,6 +9,7 @@ import { FloatingShoe } from "./FloatingShoe";
 import { ColorwayPicker } from "./ColorwayPicker";
 import { SizePicker } from "./SizePicker";
 import { BuyActions } from "./BuyActions";
+import { isLight } from "@/lib/color";
 
 type Props = {
   product: Product;
@@ -27,18 +28,24 @@ export function ShoeShowcase({ product, variant }: Props) {
     if (size && next && !next.inStock.includes(size)) setSize(null);
   };
 
+  // Dark backgrounds get white text so everything stays readable
+  const dark = !isLight(colorway.bg);
+  const outline = dark
+    ? "border-white hover:bg-white hover:text-ink"
+    : "border-ink hover:bg-ink hover:text-white";
+
   const TitleTag = variant === "detail" ? "h1" : "h2";
 
   return (
     <motion.section
       animate={{ backgroundColor: colorway.bg }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="relative overflow-hidden"
+      className={`relative overflow-hidden transition-colors duration-500 ${dark ? "text-white" : "text-ink"}`}
       style={{ backgroundColor: colorway.bg }}
     >
       <span
         aria-hidden
-        className="display pointer-events-none absolute -right-6 top-6 select-none text-[34vw] tracking-tighter text-white/25 md:text-[22vw]"
+        className={`display pointer-events-none absolute -right-6 top-6 select-none text-[34vw] tracking-tighter md:text-[22vw] ${dark ? "text-white/10" : "text-white/25"}`}
         style={{ fontStretch: "62%" }}
       >
         {product.brand}
@@ -58,7 +65,7 @@ export function ShoeShowcase({ product, variant }: Props) {
           {variant === "detail" ? (
             <>
               <SizePicker inStock={colorway.inStock} selected={size} onSelect={setSize} />
-              <BuyActions product={product} colorway={colorway} size={size} />
+              <BuyActions product={product} colorway={colorway} size={size} dark={dark} />
             </>
           ) : (
             <div className="flex flex-wrap gap-3">
@@ -68,7 +75,7 @@ export function ShoeShowcase({ product, variant }: Props) {
               >
                 Shop this shoe
               </Link>
-              <Link href="/shop" className="rounded-[2px] border-2 border-ink px-6 py-[14px] font-bold hover:bg-ink hover:text-white">
+              <Link href="/shop" className={`rounded-[2px] border-2 px-6 py-[14px] font-bold ${outline}`}>
                 See all shoes
               </Link>
             </div>

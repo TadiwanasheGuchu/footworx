@@ -8,9 +8,11 @@ type Props = {
   product: Product;
   colorway: Colorway;
   size: string | null;
+  /** True when the background behind the buttons is dark */
+  dark?: boolean;
 };
 
-export function BuyActions({ product, colorway, size }: Props) {
+export function BuyActions({ product, colorway, size, dark = false }: Props) {
   const [notice, setNotice] = useState<string | null>(null);
   const shoe = `${product.brand} ${product.name}, ${colorway.name}`;
   const sizeText = size ? `size ${size}` : "(size: please advise)";
@@ -45,7 +47,7 @@ export function BuyActions({ product, colorway, size }: Props) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={needSize}
-          className="flex items-center gap-2 rounded-[2px] bg-ink px-6 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5"
+          className={`flex items-center gap-2 rounded-[2px] px-6 py-4 text-base font-bold transition-transform hover:-translate-y-0.5 ${dark ? "bg-white text-ink" : "bg-ink text-white"}`}
         >
           <WhatsAppIcon />
           Order on WhatsApp
@@ -55,7 +57,7 @@ export function BuyActions({ product, colorway, size }: Props) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={needSize}
-          className="rounded-[2px] border-2 border-ink px-6 py-[14px] text-base font-bold text-ink transition-colors hover:bg-ink hover:text-white"
+          className={`rounded-[2px] border-2 px-6 py-[14px] text-base font-bold transition-colors ${dark ? "border-white hover:bg-white hover:text-ink" : "border-ink hover:bg-ink hover:text-white"}`}
         >
           Collect in store
         </a>

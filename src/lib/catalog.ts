@@ -1,6 +1,7 @@
 import { createClient } from "next-sanity";
 import { products as sampleProducts, type Product, type Colorway } from "@/data/products";
 import { projectId, dataset, apiVersion, sanityConfigured } from "@/sanity/env";
+import { isLight } from "./color";
 
 const client = sanityConfigured ? createClient({ projectId, dataset, apiVersion, useCdn: true }) : null;
 
@@ -36,11 +37,6 @@ const query = `*[_type == "product" && defined(slug.current) && count(colorways)
   colorways[]{ _key, name, "imageUrl": image.asset->url, swatch, background, inStock }
 }`;
 
-function isLight(hex: string) {
-  const h = hex.replace("#", "");
-  const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
-  return 0.299 * r + 0.587 * g + 0.114 * b > 186;
-}
 
 function toProduct(p: SanityProduct): Product {
   const colorways: Colorway[] = (p.colorways ?? []).map((c) => {

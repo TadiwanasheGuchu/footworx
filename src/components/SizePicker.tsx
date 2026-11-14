@@ -9,7 +9,7 @@ type Props = {
 export function SizePicker({ inStock, selected, onSelect }: Props) {
   return (
     <fieldset className="flex flex-col gap-3">
-      <legend className="label mb-3 text-steel">Size (EU)</legend>
+      <legend className="label mb-3 opacity-80">Size (EU)</legend>
       <div className="flex flex-wrap gap-2">
         {allSizes.map((s) => {
           const out = !inStock.includes(s);

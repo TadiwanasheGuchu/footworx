@@ -3,13 +3,32 @@ import { whatsappLink } from "@/lib/site";
 
 type Brand = { name: string; logo?: string; inShop: boolean };
 
+/**
+ * Give every logo roughly the same visual weight: wide logos get more width,
+ * tall ones more height. Sanity image URLs end in "-<width>x<height>.<ext>".
+ */
+function logoSize(url: string) {
+  const m = url.match(/-(\d+)x(\d+)\.[a-z]+$/i);
+  const aspect = m ? Number(m[1]) / Number(m[2]) : 2.5;
+  const area = 7200; // px², about 150 × 48
+  let w = Math.sqrt(area * aspect);
+  let h = w / aspect;
+  if (h > 64) { h = 64; w = h * aspect; }
+  if (w > 190) { w = 190; h = w / aspect; }
+  return { width: Math.round(w), height: Math.round(h) };
+}
+
 function BrandItem({ b, hidden }: { b: Brand; hidden?: boolean }) {
-  const inner = b.logo ? (
+  const size = b.logo ? logoSize(b.logo) : null;
+  const inner = b.logo && size ? (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={`${b.logo}?h=96&fm=png`}
+      src={`${b.logo}?h=${size.height * 2}&fm=png`}
       alt={hidden ? "" : b.name}
-      className="h-10 w-auto max-w-[170px] object-contain opacity-70 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0 sm:h-12"
+      width={size.width}
+      height={size.height}
+      style={{ width: size.width, height: size.height }}
+      className="max-w-none object-contain opacity-70 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0"
       loading="lazy"
     />
   ) : (

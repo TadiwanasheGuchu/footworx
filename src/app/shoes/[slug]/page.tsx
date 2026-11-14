@@ -36,8 +36,8 @@ export default async function ShoePage({ params }: Params) {
           ["Not sure of your size?", "Message us and we’ll help you choose, or come in and try them on."],
           ["Pay your way", "WhatsApp orders, EFT or in store. Card payments online coming soon."],
         ].map(([title, text]) => (
-          <div key={title} className="rounded-[4px] bg-white p-6">
-            <h2 className="mb-2 text-lg font-extrabold">{title}</h2>
+          <div key={title} className="rounded-3xl bg-tile p-6">
+            <h2 className="mb-2 text-lg font-semibold">{title}</h2>
             <p className="text-steel">{text}</p>
           </div>
         ))}
@@ -45,8 +45,8 @@ export default async function ShoePage({ params }: Params) {
 
       {related.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-8">
-          <h2 className="display mb-6 text-4xl">You might also like</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <h2 className="mb-6 text-3xl font-bold tracking-tight">You might also like</h2>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
             {related.map((p) => (
               <ProductCard key={p.slug} product={p} />
             ))}

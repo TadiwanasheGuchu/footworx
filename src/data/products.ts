@@ -45,9 +45,9 @@ export const products: Product[] = [
     description:
       "Placeholder description. A cushioned everyday running shoe for long kilometres on Windhoek's roads.",
     colorways: [
-      { id: "navy", name: "Navy / White", upper: "#0b1b2b", sole: "#ffffff", accent: "#ff5a1f", lace: "#ffffff", bg: "#38b6ff", inStock: ["40", "41", "42", "43", "44"] },
-      { id: "dune", name: "Dune Orange", upper: "#ff5a1f", sole: "#0b1b2b", accent: "#0b1b2b", lace: "#ffffff", bg: "#ffc7b0", inStock: ["39", "41", "42"] },
-      { id: "cloud", name: "Cloud White", upper: "#ffffff", sole: "#38b6ff", accent: "#38b6ff", lace: "#0b1b2b", bg: "#bfe6ff", inStock: ["38", "40", "42", "44", "45"] },
+      { id: "navy", name: "Navy / White", upper: "#0b1b2b", sole: "#ffffff", accent: "#ff5a1f", lace: "#ffffff", bg: "#d6efff", inStock: ["40", "41", "42", "43", "44"] },
+      { id: "dune", name: "Dune Orange", upper: "#ff5a1f", sole: "#0b1b2b", accent: "#0b1b2b", lace: "#ffffff", bg: "#ffe6dc", inStock: ["39", "41", "42"] },
+      { id: "cloud", name: "Cloud White", upper: "#ffffff", sole: "#38b6ff", accent: "#38b6ff", lace: "#0b1b2b", bg: "#e3f4ff", inStock: ["38", "40", "42", "44", "45"] },
       { id: "sky", name: "Footworx Blue", upper: "#38b6ff", sole: "#ffffff", accent: "#0b1b2b", lace: "#0b1b2b", bg: "#e4eef5", inStock: ["41", "42", "43"] },
     ],
   },
@@ -60,7 +60,7 @@ export const products: Product[] = [
     price: 3299,
     description: "Placeholder description. Maximum cushioning for recovery runs and long days on your feet.",
     colorways: [
-      { id: "black", name: "Black", upper: "#1c1f24", sole: "#1c1f24", accent: "#38b6ff", lace: "#ffffff", bg: "#bfe6ff", inStock: ["38", "39", "40", "41"] },
+      { id: "black", name: "Black", upper: "#1c1f24", sole: "#1c1f24", accent: "#38b6ff", lace: "#ffffff", bg: "#e3f4ff", inStock: ["38", "39", "40", "41"] },
       { id: "lilac", name: "Pale Lilac", upper: "#d9cff5", sole: "#ffffff", accent: "#0b1b2b", lace: "#0b1b2b", bg: "#efeaff", inStock: ["38", "40"] },
     ],
   },
@@ -88,8 +88,8 @@ export const products: Product[] = [
     isNew: true,
     description: "Placeholder description. Firm-ground football boot with a light, responsive feel.",
     colorways: [
-      { id: "white", name: "White / Blue", upper: "#ffffff", sole: "#38b6ff", accent: "#38b6ff", lace: "#0b1b2b", bg: "#38b6ff", inStock: ["39", "40", "41", "42", "43", "44"] },
-      { id: "red", name: "Signal Red", upper: "#d92b2b", sole: "#ffffff", accent: "#0b1b2b", lace: "#ffffff", bg: "#ffd3d3", inStock: ["40", "42"] },
+      { id: "white", name: "White / Blue", upper: "#ffffff", sole: "#38b6ff", accent: "#38b6ff", lace: "#0b1b2b", bg: "#d6efff", inStock: ["39", "40", "41", "42", "43", "44"] },
+      { id: "red", name: "Signal Red", upper: "#d92b2b", sole: "#ffffff", accent: "#0b1b2b", lace: "#ffffff", bg: "#ffe5e5", inStock: ["40", "42"] },
     ],
   },
   {
@@ -103,7 +103,7 @@ export const products: Product[] = [
     description: "Placeholder description. Affordable, comfortable trainer for running and the gym.",
     colorways: [
       { id: "grey", name: "Grey / Orange", upper: "#5b6b7a", sole: "#ffffff", accent: "#ff5a1f", lace: "#ffffff", bg: "#ffe3d8", inStock: ["38", "39", "40", "41", "42", "43"] },
-      { id: "navy", name: "Navy", upper: "#0b1b2b", sole: "#ffffff", accent: "#38b6ff", lace: "#ffffff", bg: "#bfe6ff", inStock: ["41", "42", "43", "44"] },
+      { id: "navy", name: "Navy", upper: "#0b1b2b", sole: "#ffffff", accent: "#38b6ff", lace: "#ffffff", bg: "#e3f4ff", inStock: ["41", "42", "43", "44"] },
     ],
   },
   {

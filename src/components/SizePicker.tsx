@@ -8,9 +8,11 @@ type Props = {
 
 export function SizePicker({ inStock, selected, onSelect }: Props) {
   return (
-    <fieldset className="flex flex-col gap-3">
-      <legend className="label mb-3 opacity-80">Size (EU)</legend>
-      <div className="flex flex-wrap gap-2">
+    <fieldset className="flex flex-col">
+      <legend className="mb-3 flex w-full justify-between text-[15px] font-semibold">
+        <span>Select size (EU)</span>
+      </legend>
+      <div className="grid grid-cols-5 gap-2">
         {allSizes.map((s) => {
           const out = !inStock.includes(s);
           const on = selected === s;
@@ -22,12 +24,12 @@ export function SizePicker({ inStock, selected, onSelect }: Props) {
               aria-pressed={on}
               aria-label={out ? `Size ${s}, sold out` : `Size ${s}`}
               onClick={() => onSelect(s)}
-              className={`h-12 min-w-14 rounded-[2px] border-2 px-3 text-base font-bold transition-colors ${
+              className={`h-12 rounded-xl border text-base font-medium transition-colors ${
                 out
-                  ? "cursor-not-allowed border-line bg-paper text-steel line-through"
+                  ? "cursor-not-allowed border-line bg-tile text-steel/70 line-through"
                   : on
                     ? "cursor-pointer border-ink bg-ink text-white"
-                    : "cursor-pointer border-ink bg-white text-ink hover:bg-blue-soft"
+                    : "cursor-pointer border-line bg-white text-ink hover:border-ink"
               }`}
             >
               {s}

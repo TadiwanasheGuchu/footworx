@@ -6,18 +6,18 @@ export const metadata: Metadata = { title: "Visit the shop" };
 export default function StorePage() {
   return (
     <>
-      <section className="bg-blue">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-8">
+      <section className="mx-auto max-w-7xl px-4 pt-6 sm:px-8">
+        <div className="rounded-[2rem] bg-blue-soft px-6 py-14 sm:px-12">
           <h1 className="display text-6xl sm:text-8xl">Visit the shop</h1>
-          <p className="mt-4 max-w-xl text-lg">Come try them on. We’ll help you find the right shoe and the right fit.</p>
+          <p className="mt-4 max-w-xl text-lg text-steel">Come try them on. We’ll help you find the right shoe and the right fit.</p>
         </div>
       </section>
       <section className="mx-auto grid max-w-7xl gap-4 px-4 py-14 sm:px-8 md:grid-cols-3">
-        <div className="rounded-[4px] bg-white p-6">
+        <div className="rounded-3xl bg-tile p-6">
           <h2 className="label mb-3 text-steel">Address</h2>
-          <p className="text-lg font-bold">{site.address}</p>
+          <p className="text-lg font-semibold">{site.address}</p>
         </div>
-        <div className="rounded-[4px] bg-white p-6">
+        <div className="rounded-3xl bg-tile p-6">
           <h2 className="label mb-3 text-steel">Opening hours</h2>
           <ul className="flex flex-col gap-1 text-lg">
             {site.hours.map((h) => (
@@ -28,21 +28,21 @@ export default function StorePage() {
             ))}
           </ul>
         </div>
-        <div className="flex flex-col gap-3 rounded-[4px] bg-white p-6">
+        <div className="flex flex-col gap-3 rounded-3xl bg-tile p-6">
           <h2 className="label text-steel">Contact</h2>
-          <p className="text-lg font-bold">{site.phoneDisplay}</p>
+          <p className="text-lg font-semibold">{site.phoneDisplay}</p>
           <a
             href={whatsappLink("Hi Footworx, I have a question.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-auto rounded-[2px] bg-ink px-5 py-3 text-center font-bold text-white"
+            className="mt-auto rounded-full bg-ink px-5 py-3 text-center font-bold text-white"
           >
             Message us on WhatsApp
           </a>
         </div>
       </section>
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-8">
-        <div className="flex aspect-[21/9] items-center justify-center rounded-[4px] border-2 border-dashed border-line bg-white text-steel">
+        <div className="flex aspect-[21/9] items-center justify-center rounded-[2rem] border-2 border-dashed border-line bg-tile text-steel">
           [Map and shop photo go here]
         </div>
       </section>

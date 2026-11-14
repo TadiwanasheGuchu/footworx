@@ -2,13 +2,16 @@
 
 @theme {
   --color-blue: #38b6ff;
-  --color-blue-soft: #bfe6ff;
+  --color-blue-soft: #e3f4ff;
   --color-ink: #0b1b2b;
-  --color-paper: #f4f7fa;
+  --color-paper: #ffffff;
+  --color-tile: #f1f4f6;
   --color-dune: #ff5a1f;
+  --color-dune-soft: #fff0e9;
   --color-steel: #5b6b7a;
-  --color-line: #dde4ea;
-  --font-sans: "Archivo Variable", system-ui, sans-serif;
+  --color-line: #e3e8ec;
+  --font-sans: "Barlow", system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Barlow", system-ui, sans-serif;
 }
 
 html {
@@ -22,18 +25,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Condensed display type for headlines */
+/* Condensed display type for big headlines (sporty, like a shoe box) */
 .display {
-  font-stretch: 75%;
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-weight: 800;
   text-transform: uppercase;
-  line-height: 0.9;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
 }
 
 .label {
   font-size: 0.8125rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 

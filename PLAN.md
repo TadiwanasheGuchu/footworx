@@ -10,7 +10,7 @@ Customers can buy online, order on WhatsApp, or reserve and collect in store.
 - **Palette:** Footworx Blue `#38B6FF`, Ink Navy `#0B1B2B` (all text, including on blue), Cool White `#F4F7FA`
   (page background, never cream/coffee), Dune Orange `#FF5A1F` (buy buttons and sale tags only, navy text),
   Steel Grey `#5B6B7A` (secondary text), borders `#DDE4EA`.
-- **Font:** Archivo (condensed heavy for headlines, regular for body).
+- **Font:** Barlow Condensed (bold caps headlines) + Barlow (body). Clean, sporty, DIN-style.
 - **Avoid:** coffee/beige backgrounds, purple gradients, glowing blobs, frosted glass, rows of icon cards,
   emoji, "Elevate your stride"-style copy, fake stats and reviews, stock photos.
 - **Feel:** sporty, fresh, energetic. The blue suits the floating-shoe hero as a default background,

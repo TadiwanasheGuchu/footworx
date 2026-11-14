@@ -48,7 +48,7 @@ function toProduct(p: SanityProduct): Product {
       sole: isLight(swatch) ? "#38b6ff" : "#ffffff",
       accent: isLight(swatch) ? "#0b1b2b" : "#ff5a1f",
       lace: isLight(swatch) ? "#0b1b2b" : "#ffffff",
-      bg: c.background?.hex ?? "#bfe6ff",
+      bg: c.background?.hex ?? "#e3f4ff",
       image: c.imageUrl ? `${c.imageUrl}?w=1400&fm=webp&q=85` : undefined,
       inStock: c.inStock ?? [],
     };

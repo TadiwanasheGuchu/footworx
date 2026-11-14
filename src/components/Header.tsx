@@ -46,7 +46,7 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-8">
         <Link href="/" aria-label="Footworx home" onClick={() => setOpen(false)}>
-          <Logo />
+          <Logo priority height={52} />
         </Link>
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Categories">
           <Suspense>

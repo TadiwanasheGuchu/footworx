@@ -1,27 +1,34 @@
-// Stand-in for the Footworx logo. Replace with the original SVG when available.
+import Image from "next/image";
+
+// The Footworx logo (transparent PNGs in /public/brand, made from the original artwork)
+const files = {
+  navy: "/brand/footworx-logo-navy.png",
+  white: "/brand/footworx-logo-white.png",
+  blue: "/brand/footworx-logo-blue.png",
+};
+
 export function Logo({
-  color = "#0b1b2b",
-  footColor = "#38b6ff",
+  variant = "navy",
+  height = 44,
   className,
+  priority,
 }: {
-  color?: string;
-  footColor?: string;
+  variant?: keyof typeof files;
+  height?: number;
   className?: string;
+  priority?: boolean;
 }) {
+  // Source image is 648 × 225
+  const width = Math.round((height * 648) / 225);
   return (
-    <span className={`inline-flex flex-col leading-none ${className ?? ""}`} style={{ color }}>
-      <span className="flex items-end gap-1">
-        <span className="text-2xl font-medium tracking-wide sm:text-[26px]">FOOTWORX</span>
-        <svg width="24" height="27" viewBox="0 0 70 78" aria-hidden style={{ color: footColor }}>
-          <ellipse cx="22" cy="12" rx="9" ry="11" fill="currentColor" />
-          <circle cx="38" cy="14" r="6" fill="currentColor" />
-          <circle cx="50" cy="20" r="5" fill="currentColor" />
-          <circle cx="59" cy="28" r="4" fill="currentColor" />
-          <circle cx="65" cy="37" r="3.3" fill="currentColor" />
-          <path d="M14 30 Q34 26 40 44 Q44 64 4 76 Q30 58 22 44 Q18 36 14 30 Z" fill="currentColor" />
-        </svg>
-      </span>
-      <span className="self-center pr-6 text-[10px] font-bold tracking-[0.2em]">NAMIBIA</span>
-    </span>
+    <Image
+      src={files[variant]}
+      alt="Footworx Namibia"
+      width={width}
+      height={height}
+      priority={priority}
+      className={className}
+      style={{ height, width: "auto" }}
+    />
   );
 }

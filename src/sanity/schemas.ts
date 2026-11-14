@@ -253,4 +253,81 @@ export const product = defineType({
   orderings: [{ title: "Newest first", name: "createdDesc", by: [{ field: "_createdAt", direction: "desc" }] }],
 });
 
-export const schemaTypes = [product, brand];
+// Which shop page a story belongs to
+export const storyPages = [
+  { title: "Shop (everything)", value: "all" },
+  { title: "All shoes", value: "shoes" },
+  { title: "All accessories", value: "accessories" },
+  ...shoeCategories.map((c) => ({ title: c, value: c })),
+  ...accessoryCategories.map((c) => ({ title: c, value: c })),
+];
+
+const storyImage = (name: string, title: string, description: string) =>
+  defineField({
+    name,
+    title,
+    description,
+    type: "image",
+    options: { hotspot: true },
+    fields: [
+      defineField({
+        name: "alt",
+        title: "Describe the photo",
+        description: 'For people who can\'t see it, e.g. "Runner on the Walvis Bay promenade at sunrise"',
+        type: "string",
+      }),
+    ],
+  });
+
+export const categoryStory = defineType({
+  name: "categoryStory",
+  title: "Category story",
+  type: "document",
+  fields: [
+    defineField({
+      name: "page",
+      title: "Shown on",
+      type: "string",
+      options: { list: storyPages, layout: "dropdown" },
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "headline",
+      title: "Headline",
+      description: "Short and bold, 2 to 4 words",
+      type: "string",
+      validation: (r) => r.required().max(40),
+    }),
+    defineField({ name: "subtitle", title: "Short line", type: "string", validation: (r) => r.max(120) }),
+    storyImage(
+      "mainImage",
+      "Main photo",
+      "Your own action photo, landscape. Click the photo, then the crop icon, to set the focus point so faces aren't cut off.",
+    ),
+    defineField({
+      name: "images",
+      title: "Extra photos",
+      description: "Up to 3 close-ups or details that tell the story (shoes in action, the shop, the dunes)",
+      type: "array",
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [defineField({ name: "alt", title: "Describe the photo", type: "string" })],
+        },
+      ],
+      validation: (r) => r.max(3),
+      options: { layout: "grid" },
+    }),
+  ],
+  preview: {
+    select: { title: "headline", page: "page", media: "mainImage" },
+    prepare: ({ title, page, media }) => ({
+      title,
+      subtitle: storyPages.find((p) => p.value === page)?.title ?? page,
+      media,
+    }),
+  },
+});
+
+export const schemaTypes = [product, brand, categoryStory];

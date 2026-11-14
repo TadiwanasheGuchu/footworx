@@ -40,6 +40,8 @@ export default defineConfig({
               ),
             S.documentTypeListItem("product").title("All products"),
             S.documentTypeListItem("brand").title("Brands"),
+            S.divider(),
+            S.documentTypeListItem("categoryStory").title("Category stories"),
           ]),
     }),
     colorInput(),

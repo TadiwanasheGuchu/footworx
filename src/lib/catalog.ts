@@ -150,3 +150,50 @@ export async function getBrandLogos(): Promise<Record<string, string>> {
 export async function isSampleCatalogue() {
   return (await getProducts()) === sampleProducts;
 }
+
+// ---------- Category stories (photo banners on shop pages) ----------
+
+export type StoryImage = { url: string; alt: string; position: string };
+export type Story = { headline: string; subtitle?: string; main?: StoryImage; images: StoryImage[] };
+
+type SanityStoryImage = { url: string | null; alt?: string | null; hotspot?: { x: number; y: number } | null } | null;
+
+const toImage = (i: SanityStoryImage, w: number): StoryImage | undefined =>
+  i?.url
+    ? {
+        url: `${i.url}?w=${w}&fm=webp&q=80`,
+        alt: i.alt ?? "",
+        position: i.hotspot ? `${Math.round(i.hotspot.x * 100)}% ${Math.round(i.hotspot.y * 100)}%` : "50% 50%",
+      }
+    : undefined;
+
+/** The story for a shop page key ("all", "shoes", "accessories" or a category), or null */
+export async function getStory(page: string): Promise<Story | null> {
+  if (!client) return null;
+  try {
+    const row = await client.fetch<{
+      headline: string;
+      subtitle?: string | null;
+      main: SanityStoryImage;
+      images: SanityStoryImage[] | null;
+    } | null>(
+      `*[_type == "categoryStory" && page == $page] | order(_updatedAt desc)[0]{
+        headline, subtitle,
+        "main": { "url": mainImage.asset->url, "alt": mainImage.alt, "hotspot": mainImage.hotspot },
+        "images": images[]{ "url": asset->url, alt, hotspot }
+      }`,
+      { page },
+      { next: { revalidate: REVALIDATE } },
+    );
+    if (!row) return null;
+    return {
+      headline: row.headline,
+      subtitle: row.subtitle ?? undefined,
+      main: toImage(row.main, 1800),
+      images: (row.images ?? []).map((i) => toImage(i, 900)).filter((i): i is StoryImage => !!i).slice(0, 3),
+    };
+  } catch (err) {
+    console.error("Sanity story fetch failed", err);
+    return null;
+  }
+}

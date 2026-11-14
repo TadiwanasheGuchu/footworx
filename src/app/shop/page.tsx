@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getProducts } from "@/lib/catalog";
+import { getProducts, getStory } from "@/lib/catalog";
+import { CategoryStory } from "@/components/CategoryStory";
 import { ProductCard } from "@/components/ProductCard";
 import { accessoryCategories, shoeCategories, type Product } from "@/data/products";
 
@@ -26,7 +27,8 @@ export default async function ShopPage({ searchParams }: Search) {
         : undefined;
   const brand = q.brand;
 
-  const products = await getProducts();
+  const storyPage = category ?? (kind === "shoe" ? "shoes" : kind === "accessory" ? "accessories" : "all");
+  const [products, story] = await Promise.all([getProducts(), getStory(storyPage)]);
   const inKind = products.filter((p) => !kind || p.kind === kind);
   const brands = [...new Set(inKind.map((p) => p.brand))].sort();
   const list = inKind.filter((p) => (!brand || p.brand === brand) && (!category || p.category === category));
@@ -51,9 +53,11 @@ export default async function ShopPage({ searchParams }: Search) {
   const types = kind === "accessory" ? accessoryCategories : kind === "shoe" ? shoeCategories : [];
 
   return (
+    <>
+    <CategoryStory page={storyPage} story={story} />
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-8">
-      <div className="mb-8 flex flex-col gap-2">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{title}</h1>
+      <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>
         <p className="text-steel">
           {list.length} {list.length === 1 ? noun[0] : noun[1]}
         </p>
@@ -101,5 +105,6 @@ export default async function ShopPage({ searchParams }: Search) {
         </p>
       )}
     </div>
+    </>
   );
 }

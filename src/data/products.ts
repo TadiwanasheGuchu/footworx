@@ -34,6 +34,9 @@ export type Product = {
   gender: "Men" | "Women" | "Unisex" | "Kids";
   /** Size options to show; defaults to EU shoe sizes. ["One size"] hides the size picker. */
   sizes?: string[];
+  /** Shoes only, used by the Shoe Finder */
+  support?: "Neutral" | "Stability";
+  cushioning?: "Soft" | "Balanced" | "Firm";
   price: number;
   description: string;
   isNew?: boolean;
@@ -60,6 +63,8 @@ export const products: Product[] = [
   {
     kind: "shoe",
     slug: "sample-road-runner",
+    support: "Neutral",
+    cushioning: "Balanced",
     brand: "Hoka",
     name: "Sample Road Runner",
     category: "Running",
@@ -78,6 +83,8 @@ export const products: Product[] = [
   {
     kind: "shoe",
     slug: "sample-max-cushion",
+    support: "Neutral",
+    cushioning: "Soft",
     brand: "Hoka",
     name: "Sample Max Cushion",
     category: "Running",
@@ -92,6 +99,8 @@ export const products: Product[] = [
   {
     kind: "shoe",
     slug: "sample-trail",
+    support: "Neutral",
+    cushioning: "Balanced",
     brand: "Hoka",
     name: "Sample Trail",
     category: "Trail",
@@ -107,6 +116,8 @@ export const products: Product[] = [
   {
     kind: "shoe",
     slug: "sample-football-boot",
+    support: "Neutral",
+    cushioning: "Firm",
     brand: "Joma",
     name: "Sample Football Boot",
     category: "Football",
@@ -122,6 +133,8 @@ export const products: Product[] = [
   {
     kind: "shoe",
     slug: "sample-daily-trainer",
+    support: "Stability",
+    cushioning: "Balanced",
     brand: "Joma",
     name: "Sample Daily Trainer",
     category: "Running",
@@ -137,6 +150,8 @@ export const products: Product[] = [
   {
     kind: "shoe",
     slug: "sample-court-casual",
+    support: "Neutral",
+    cushioning: "Firm",
     brand: "Joma",
     name: "Sample Court Casual",
     category: "Casual",

@@ -69,6 +69,9 @@ export function Header() {
           </Suspense>
         </nav>
         <div className="hidden items-center gap-2 md:flex">
+          <Link href="/shoe-finder" className="rounded-full px-4 py-2 text-[15px] font-medium hover:bg-tile">
+            Shoe Finder
+          </Link>
           <Link href="/store#assessment" className="rounded-full px-4 py-2 text-[15px] font-medium hover:bg-tile">
             Foot assessment
           </Link>
@@ -109,7 +112,10 @@ export function Header() {
               <CategoryPills onPick={() => setOpen(false)} />
             </Suspense>
           </div>
-          <Link href="/store#assessment" onClick={() => setOpen(false)} className="mt-2 rounded-full px-4 py-3 font-medium hover:bg-tile">
+          <Link href="/shoe-finder" onClick={() => setOpen(false)} className="mt-2 rounded-full px-4 py-3 font-medium hover:bg-tile">
+            Shoe Finder
+          </Link>
+          <Link href="/store#assessment" onClick={() => setOpen(false)} className="rounded-full px-4 py-3 font-medium hover:bg-tile">
             Foot assessment
           </Link>
           <Link href="/store" onClick={() => setOpen(false)} className="rounded-full px-4 py-3 font-medium hover:bg-tile">

@@ -176,6 +176,23 @@ export const product = defineType({
       hidden: ({ document }) => isAccessory(document as Doc),
     }),
     defineField({
+      name: "support",
+      title: "Support (for the Shoe Finder)",
+      description: "Stability shoes give extra support for flat or low arches. Most shoes are Neutral.",
+      type: "string",
+      group: "details",
+      options: { list: ["Neutral", "Stability"], layout: "radio", direction: "horizontal" },
+      hidden: ({ document }) => isAccessory(document as Doc),
+    }),
+    defineField({
+      name: "cushioning",
+      title: "Cushioning (for the Shoe Finder)",
+      type: "string",
+      group: "details",
+      options: { list: ["Soft", "Balanced", "Firm"], layout: "radio", direction: "horizontal" },
+      hidden: ({ document }) => isAccessory(document as Doc),
+    }),
+    defineField({
       name: "price",
       title: "Price (N$)",
       type: "number",

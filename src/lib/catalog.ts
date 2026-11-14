@@ -20,6 +20,8 @@ type SanityProduct = {
   slug: string;
   kind: "shoe" | "accessory";
   accessoryType?: AccessoryCategory | null;
+  support?: Product["support"] | null;
+  cushioning?: Product["cushioning"] | null;
   brand: string | null;
   name: string;
   category: Product["category"];
@@ -47,6 +49,8 @@ const query = `*[_type == "product" && defined(slug.current) && count(colorways)
   "slug": slug.current,
   "kind": coalesce(kind, "shoe"),
   accessoryType,
+  support,
+  cushioning,
   "brand": brand->name,
   name, category, gender, price, salePrice, description, isNew, featured,
   colorways[]{
@@ -90,6 +94,8 @@ function toProduct(p: SanityProduct): Product {
     category: accessory ? accType : p.category,
     gender: accessory ? "Unisex" : p.gender,
     sizes: accessory ? accessorySizeOptions[accType] : undefined,
+    support: accessory ? undefined : (p.support ?? undefined),
+    cushioning: accessory ? undefined : (p.cushioning ?? undefined),
     price: p.price,
     salePrice: p.salePrice ?? undefined,
     description: p.description ?? "",

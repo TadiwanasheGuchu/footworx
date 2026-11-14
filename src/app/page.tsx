@@ -93,8 +93,8 @@ export default async function Home() {
             >
               Book on WhatsApp
             </a>
-            <Link href="/store#assessment" className="rounded-full border border-white/40 px-7 py-3.5 text-center font-semibold hover:border-white">
-              How it works
+            <Link href="/shoe-finder" className="rounded-full border border-white/40 px-7 py-3.5 text-center font-semibold hover:border-white">
+              Try the 1-minute Shoe Finder
             </Link>
           </div>
         </div>
@@ -115,7 +115,7 @@ export default async function Home() {
             ) : (
               <a
                 key={b}
-                href={whatsappLink(`Hi Footworx, which ${b} shoes do you have in stock?`)}
+                href={whatsappLink(`Hi Footworx, which ${b} products do you have in stock?`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full border border-line px-6 py-3 text-lg font-semibold hover:border-ink"

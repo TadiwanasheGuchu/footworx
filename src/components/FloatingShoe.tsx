@@ -1,18 +1,22 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import type { Colorway } from "@/data/products";
+import type { Colorway, Product } from "@/data/products";
 import { ShoeArt } from "./ShoeArt";
 
 type Props = {
   colorway: Colorway;
   label: string;
   className?: string;
+  /** Shoes tilt like they're mid-stride; accessories float level */
+  tilt?: boolean;
+  category?: Product["category"];
 };
 
 /** The signature floating shoe: bobs gently and swaps with a tilt when the colorway changes. */
-export function FloatingShoe({ colorway, label, className }: Props) {
+export function FloatingShoe({ colorway, label, className, tilt = true, category }: Props) {
   const reduce = useReducedMotion();
+  const r = tilt ? 1 : 0;
 
   return (
     <div className={`relative flex flex-col items-center ${className ?? ""}`}>
@@ -26,12 +30,17 @@ export function FloatingShoe({ colorway, label, className }: Props) {
             <motion.div
               key={colorway.id}
               className="absolute inset-0"
-              initial={reduce ? { opacity: 0 } : { opacity: 0, x: 120, rotate: 8, scale: 0.92 }}
-              animate={{ opacity: 1, x: 0, rotate: -4, scale: 1 }}
-              exit={reduce ? { opacity: 0 } : { opacity: 0, x: -120, rotate: -14, scale: 0.92 }}
+              initial={reduce ? { opacity: 0 } : { opacity: 0, x: 120, rotate: 8 * r, scale: 0.92 }}
+              animate={{ opacity: 1, x: 0, rotate: -4 * r, scale: 1 }}
+              exit={reduce ? { opacity: 0 } : { opacity: 0, x: -120, rotate: -14 * r, scale: 0.92 }}
               transition={{ type: "spring", stiffness: 160, damping: 18 }}
             >
-              <ShoeArt colorway={colorway} label={`${label} in ${colorway.name}`} className="h-full w-full drop-shadow-xl" />
+              <ShoeArt
+                colorway={colorway}
+                category={category}
+                label={`${label} in ${colorway.name}`}
+                className="h-full w-full object-contain drop-shadow-xl"
+              />
             </motion.div>
           </AnimatePresence>
         </div>

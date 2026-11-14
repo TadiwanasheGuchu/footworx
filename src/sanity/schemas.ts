@@ -1,5 +1,10 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { allSizes } from "@/data/products";
+import { accessoryCategories, accessorySizeOptions, allSizes, shoeCategories } from "@/data/products";
+
+// Field visibility helpers: the editor only shows what fits the product type
+type Doc = { kind?: string; accessoryType?: string } | undefined;
+const isAccessory = (d: Doc) => d?.kind === "accessory";
+const accessoryIs = (d: Doc, t: string) => isAccessory(d) && d?.accessoryType === t;
 
 export const brand = defineType({
   name: "brand",
@@ -25,7 +30,8 @@ const colorway = defineArrayMember({
     defineField({
       name: "image",
       title: "Photo",
-      description: "Side view, toe pointing right, plain or transparent background. Same angle for every colorway.",
+      description:
+        "Shoes: side view, toe pointing right, transparent background (PNG/WebP). Accessories: the product on a plain or transparent background.",
       type: "image",
       options: { hotspot: true },
     }),
@@ -59,28 +65,70 @@ const colorway = defineArrayMember({
       type: "array",
       of: [{ type: "string" }],
       options: { list: allSizes.map((s) => ({ title: s, value: s })), layout: "grid" },
+      hidden: ({ document }) => isAccessory(document as Doc),
+    }),
+    defineField({
+      name: "inStockInsoles",
+      title: "Insole sizes in stock (EU)",
+      description: "Tick every size you have in this color",
+      type: "array",
+      of: [{ type: "string" }],
+      options: { list: accessorySizeOptions.Insoles.map((s) => ({ title: s, value: s })), layout: "grid" },
+      hidden: ({ document }) => !accessoryIs(document as Doc, "Insoles"),
+    }),
+    defineField({
+      name: "inStockSocks",
+      title: "Sock sizes in stock",
+      description: "Tick every size you have in this color",
+      type: "array",
+      of: [{ type: "string" }],
+      options: { list: accessorySizeOptions.Socks.map((s) => ({ title: s, value: s })), layout: "grid" },
+      hidden: ({ document }) => !accessoryIs(document as Doc, "Socks"),
+    }),
+    defineField({
+      name: "inStockOneSize",
+      title: "In stock",
+      description: "Tick when you have this color in stock",
+      type: "boolean",
+      initialValue: true,
+      hidden: ({ document }) => !accessoryIs(document as Doc, "Headphones"),
     }),
   ],
   preview: {
-    select: { title: "name", media: "image", sizes: "inStock" },
-    prepare: ({ title, media, sizes }) => ({
-      title,
-      media,
-      subtitle: sizes?.length ? `In stock: ${sizes.join(", ")}` : "No sizes in stock",
-    }),
+    select: { title: "name", media: "image", sizes: "inStock", ins: "inStockInsoles", socks: "inStockSocks", one: "inStockOneSize" },
+    prepare: ({ title, media, sizes, ins, socks, one }) => {
+      const list: string[] = sizes?.length ? sizes : ins?.length ? ins : socks?.length ? socks : one ? ["One size"] : [];
+      return { title, media, subtitle: list.length ? `In stock: ${list.join(", ")}` : "Not in stock" };
+    },
   },
 });
 
 export const product = defineType({
   name: "product",
-  title: "Shoe",
+  title: "Product",
   type: "document",
   groups: [
     { name: "details", title: "Details", default: true },
     { name: "colors", title: "Colors & sizes" },
   ],
   fields: [
-    defineField({ name: "name", title: "Shoe name", type: "string", group: "details", validation: (r) => r.required() }),
+    defineField({
+      name: "kind",
+      title: "Product type",
+      type: "string",
+      group: "details",
+      options: {
+        list: [
+          { title: "Shoe", value: "shoe" },
+          { title: "Accessory (insoles, socks, headphones)", value: "accessory" },
+        ],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "shoe",
+      validation: (r) => r.required(),
+    }),
+    defineField({ name: "name", title: "Product name", type: "string", group: "details", validation: (r) => r.required() }),
     defineField({
       name: "brand",
       title: "Brand",
@@ -92,7 +140,7 @@ export const product = defineType({
     defineField({
       name: "slug",
       title: "Web address",
-      description: 'Click "Generate". This becomes footworx.../shoes/<this>',
+      description: 'Click "Generate". This becomes the end of the product\'s web address.',
       type: "slug",
       group: "details",
       options: { source: "name", maxLength: 80 },
@@ -100,11 +148,23 @@ export const product = defineType({
     }),
     defineField({
       name: "category",
-      title: "Type",
+      title: "Shoe type",
       type: "string",
       group: "details",
-      options: { list: ["Running", "Trail", "Football", "Casual"], layout: "radio", direction: "horizontal" },
-      validation: (r) => r.required(),
+      options: { list: [...shoeCategories], layout: "radio", direction: "horizontal" },
+      hidden: ({ document }) => isAccessory(document as Doc),
+      validation: (r) =>
+        r.custom((v, ctx) => (isAccessory(ctx.document as Doc) || v ? true : "Choose a shoe type")),
+    }),
+    defineField({
+      name: "accessoryType",
+      title: "Accessory type",
+      type: "string",
+      group: "details",
+      options: { list: [...accessoryCategories], layout: "radio", direction: "horizontal" },
+      hidden: ({ document }) => !isAccessory(document as Doc),
+      validation: (r) =>
+        r.custom((v, ctx) => (!isAccessory(ctx.document as Doc) || v ? true : "Choose an accessory type")),
     }),
     defineField({
       name: "gender",
@@ -113,7 +173,7 @@ export const product = defineType({
       group: "details",
       options: { list: ["Men", "Women", "Unisex", "Kids"], layout: "radio", direction: "horizontal" },
       initialValue: "Unisex",
-      validation: (r) => r.required(),
+      hidden: ({ document }) => isAccessory(document as Doc),
     }),
     defineField({
       name: "price",
@@ -125,7 +185,7 @@ export const product = defineType({
     defineField({
       name: "salePrice",
       title: "Sale price (N$)",
-      description: "Leave empty when the shoe is not on sale",
+      description: "Leave empty when it is not on sale",
       type: "number",
       group: "details",
       validation: (r) => r.positive(),
@@ -141,7 +201,7 @@ export const product = defineType({
     defineField({
       name: "featured",
       title: "Feature on the home page",
-      description: "The newest featured shoe is the big floating shoe on the home page",
+      description: "Shoes only: the newest featured shoe is the big floating shoe on the home page",
       type: "boolean",
       initialValue: false,
       group: "details",
@@ -156,10 +216,12 @@ export const product = defineType({
     }),
   ],
   preview: {
-    select: { title: "name", brand: "brand.name", price: "price", media: "colorways.0.image" },
-    prepare: ({ title, brand, price, media }) => ({
+    select: { title: "name", brand: "brand.name", price: "price", media: "colorways.0.image", kind: "kind", acc: "accessoryType" },
+    prepare: ({ title, brand, price, media, kind, acc }) => ({
       title,
-      subtitle: [brand, price ? `N$ ${price}` : null].filter(Boolean).join(" · "),
+      subtitle: [kind === "accessory" ? acc || "Accessory" : null, brand, price ? `N$ ${price}` : null]
+        .filter(Boolean)
+        .join(" · "),
       media,
     }),
   },

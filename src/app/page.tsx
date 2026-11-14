@@ -8,9 +8,17 @@ export const revalidate = 60;
 
 const categories = ["Running", "Trail", "Football", "Casual"];
 
+const accessoryTiles = [
+  { category: "Insoles", text: "Support and comfort, matched to your foot assessment." },
+  { category: "Socks", text: "Cushioned running socks that keep blisters away." },
+  { category: "Headphones", text: "Sport headphones that stay put on the run." },
+];
+
 export default async function Home() {
   const [featured, products] = await Promise.all([getFeatured(), getProducts()]);
-  const newArrivals = [...products].sort((a, b) => Number(!!b.isNew) - Number(!!a.isNew)).slice(0, 8);
+  const shoes = products.filter((p) => p.kind === "shoe");
+  const accessories = products.filter((p) => p.kind === "accessory");
+  const newArrivals = [...shoes].sort((a, b) => Number(!!b.isNew) - Number(!!a.isNew)).slice(0, 8);
   const inCatalogue = new Set(products.map((p) => p.brand.toLowerCase()));
 
   return (
@@ -37,6 +45,34 @@ export default async function Home() {
             <ProductCard key={p.slug} product={p} />
           ))}
         </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-8">
+        <div className="mb-6 flex items-end justify-between">
+          <h2 className="text-3xl font-bold tracking-tight">Accessories</h2>
+          <Link href="/shop?kind=accessory" className="font-medium underline underline-offset-4 hover:text-steel">
+            View all
+          </Link>
+        </div>
+        <div className="mb-8 grid gap-3 sm:grid-cols-3">
+          {accessoryTiles.map((t) => (
+            <Link
+              key={t.category}
+              href={`/shop?category=${t.category}`}
+              className="group flex flex-col gap-1 rounded-3xl bg-tile p-6 transition-colors hover:bg-ink hover:text-white"
+            >
+              <span className="display text-4xl">{t.category}</span>
+              <span className="text-steel group-hover:text-white/75">{t.text}</span>
+            </Link>
+          ))}
+        </div>
+        {accessories.length > 0 && (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
+            {accessories.slice(0, 4).map((p) => (
+              <ProductCard key={p.slug} product={p} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-8">

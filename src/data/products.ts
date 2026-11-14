@@ -19,12 +19,21 @@ export type Colorway = {
   inStock: string[];
 };
 
+export const shoeCategories = ["Running", "Trail", "Football", "Casual"] as const;
+export const accessoryCategories = ["Insoles", "Socks", "Headphones"] as const;
+export type ShoeCategory = (typeof shoeCategories)[number];
+export type AccessoryCategory = (typeof accessoryCategories)[number];
+
 export type Product = {
   slug: string;
+  /** "shoe" gets the floating, tilted shoe; "accessory" a straight product view */
+  kind: "shoe" | "accessory";
   brand: string;
   name: string;
-  category: "Running" | "Football" | "Casual" | "Trail";
+  category: ShoeCategory | AccessoryCategory;
   gender: "Men" | "Women" | "Unisex" | "Kids";
+  /** Size options to show; defaults to EU shoe sizes. ["One size"] hides the size picker. */
+  sizes?: string[];
   price: number;
   description: string;
   isNew?: boolean;
@@ -34,9 +43,22 @@ export type Product = {
 };
 
 export const allSizes = ["38", "39", "40", "41", "42", "43", "44", "45", "46"];
+export const ONE_SIZE = "One size";
+
+/** Size options per accessory category (staff tick from these in Sanity) */
+export const accessorySizeOptions: Record<AccessoryCategory, string[]> = {
+  Insoles: ["36-37", "38-39", "40-41", "42-43", "44-45", "46-47"],
+  Socks: ["S (35-38)", "M (39-42)", "L (43-46)", "XL (47-50)"],
+  Headphones: [ONE_SIZE],
+};
+
+export function sizesFor(p: Product) {
+  return p.sizes ?? allSizes;
+}
 
 export const products: Product[] = [
   {
+    kind: "shoe",
     slug: "sample-road-runner",
     brand: "Hoka",
     name: "Sample Road Runner",
@@ -54,6 +76,7 @@ export const products: Product[] = [
     ],
   },
   {
+    kind: "shoe",
     slug: "sample-max-cushion",
     brand: "Hoka",
     name: "Sample Max Cushion",
@@ -67,6 +90,7 @@ export const products: Product[] = [
     ],
   },
   {
+    kind: "shoe",
     slug: "sample-trail",
     brand: "Hoka",
     name: "Sample Trail",
@@ -81,6 +105,7 @@ export const products: Product[] = [
     ],
   },
   {
+    kind: "shoe",
     slug: "sample-football-boot",
     brand: "Joma",
     name: "Sample Football Boot",
@@ -95,6 +120,7 @@ export const products: Product[] = [
     ],
   },
   {
+    kind: "shoe",
     slug: "sample-daily-trainer",
     brand: "Joma",
     name: "Sample Daily Trainer",
@@ -109,6 +135,7 @@ export const products: Product[] = [
     ],
   },
   {
+    kind: "shoe",
     slug: "sample-court-casual",
     brand: "Joma",
     name: "Sample Court Casual",
@@ -119,6 +146,50 @@ export const products: Product[] = [
     colorways: [
       { id: "white", name: "All White", upper: "#ffffff", sole: "#ffffff", accent: "#dde4ea", lace: "#dde4ea", bg: "#e4eef5", inStock: ["37", "38", "39", "40", "41"] },
       { id: "sand", name: "Dune Pink", upper: "#ffc7b0", sole: "#ffffff", accent: "#ff5a1f", lace: "#ffffff", bg: "#fff0e9", inStock: ["38", "39"] },
+    ],
+  },
+  {
+    kind: "accessory",
+    slug: "sample-support-insoles",
+    brand: "Footworx",
+    name: "Sample Support Insoles",
+    category: "Insoles",
+    gender: "Unisex",
+    sizes: ["36-37", "38-39", "40-41", "42-43", "44-45", "46-47"],
+    price: 699,
+    description: "Placeholder description. Arch-support insoles, fitted after your foot assessment.",
+    colorways: [
+      { id: "blue", name: "Blue", upper: "#38b6ff", sole: "#0b1b2b", accent: "#0b1b2b", lace: "#ffffff", bg: "#e3f4ff", inStock: ["38-39", "40-41", "42-43"] },
+    ],
+  },
+  {
+    kind: "accessory",
+    slug: "sample-running-socks",
+    brand: "Footworx",
+    name: "Sample Running Socks",
+    category: "Socks",
+    gender: "Unisex",
+    sizes: ["S (35-38)", "M (39-42)", "L (43-46)", "XL (47-50)"],
+    price: 189,
+    isNew: true,
+    description: "Placeholder description. Cushioned, blister-resistant running socks.",
+    colorways: [
+      { id: "white", name: "White", upper: "#ffffff", sole: "#38b6ff", accent: "#38b6ff", lace: "#0b1b2b", bg: "#e3f4ff", inStock: ["S (35-38)", "M (39-42)", "L (43-46)"] },
+      { id: "black", name: "Black", upper: "#1c1f24", sole: "#ff5a1f", accent: "#ff5a1f", lace: "#ffffff", bg: "#ffe6dc", inStock: ["M (39-42)", "L (43-46)"] },
+    ],
+  },
+  {
+    kind: "accessory",
+    slug: "sample-sport-headphones",
+    brand: "Footworx",
+    name: "Sample Sport Headphones",
+    category: "Headphones",
+    gender: "Unisex",
+    sizes: ["One size"],
+    price: 1499,
+    description: "Placeholder description. Open-ear sport headphones that stay put on the run.",
+    colorways: [
+      { id: "black", name: "Black", upper: "#1c1f24", sole: "#38b6ff", accent: "#38b6ff", lace: "#ffffff", bg: "#e3f4ff", inStock: ["One size"] },
     ],
   },
 ];

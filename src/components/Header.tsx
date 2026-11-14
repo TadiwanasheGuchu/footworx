@@ -12,12 +12,27 @@ const categories = [
   { href: "/shop?category=Trail", label: "Trail" },
   { href: "/shop?category=Football", label: "Football" },
   { href: "/shop?category=Casual", label: "Casual" },
+  { href: "/shop?kind=accessory", label: "Accessories" },
 ];
+
+const accessoryTypes = ["Insoles", "Socks", "Headphones"];
 
 function CategoryPills({ onPick }: { onPick?: () => void }) {
   const path = usePathname();
   const params = useSearchParams();
-  const current = path === "/shop" ? (params.get("category") ? `/shop?category=${params.get("category")}` : "/shop") : null;
+  const cat = params.get("category");
+  const current =
+    path.startsWith("/accessories/")
+      ? "/shop?kind=accessory"
+      : path !== "/shop"
+        ? null
+        : cat && accessoryTypes.includes(cat)
+          ? "/shop?kind=accessory"
+          : cat
+            ? `/shop?category=${cat}`
+            : params.get("kind") === "accessory"
+              ? "/shop?kind=accessory"
+              : "/shop";
   return (
     <>
       {categories.map((c) => {

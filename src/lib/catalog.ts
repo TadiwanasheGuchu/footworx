@@ -1,5 +1,12 @@
 import { createClient } from "next-sanity";
-import { products as sampleProducts, type Product, type Colorway } from "@/data/products";
+import {
+  accessorySizeOptions,
+  products as sampleProducts,
+  ONE_SIZE,
+  type AccessoryCategory,
+  type Colorway,
+  type Product,
+} from "@/data/products";
 import { projectId, dataset, apiVersion, sanityConfigured } from "@/sanity/env";
 import { isLight } from "./color";
 
@@ -11,6 +18,8 @@ const REVALIDATE = 60;
 type SanityColor = { hex?: string } | null;
 type SanityProduct = {
   slug: string;
+  kind: "shoe" | "accessory";
+  accessoryType?: AccessoryCategory | null;
   brand: string | null;
   name: string;
   category: Product["category"];
@@ -28,18 +37,34 @@ type SanityProduct = {
     swatch: SanityColor;
     background: SanityColor;
     inStock?: string[] | null;
+    inStockInsoles?: string[] | null;
+    inStockSocks?: string[] | null;
+    inStockOneSize?: boolean | null;
   }[] | null;
 };
 
 const query = `*[_type == "product" && defined(slug.current) && count(colorways) > 0] | order(_createdAt desc){
   "slug": slug.current,
+  "kind": coalesce(kind, "shoe"),
+  accessoryType,
   "brand": brand->name,
   name, category, gender, price, salePrice, description, isNew, featured,
-  colorways[]{ _key, name, "imageUrl": image.asset->url, "gallery": gallery[].asset->url, swatch, background, inStock }
+  colorways[]{
+    _key, name, "imageUrl": image.asset->url, "gallery": gallery[].asset->url, swatch, background,
+    inStock, inStockInsoles, inStockSocks, inStockOneSize
+  }
 }`;
 
 
 function toProduct(p: SanityProduct): Product {
+  const accessory = p.kind === "accessory";
+  const accType: AccessoryCategory = p.accessoryType ?? "Socks";
+  const stockFor = (c: NonNullable<SanityProduct["colorways"]>[number]) => {
+    if (!accessory) return c.inStock ?? [];
+    if (accType === "Insoles") return c.inStockInsoles ?? [];
+    if (accType === "Socks") return c.inStockSocks ?? [];
+    return c.inStockOneSize === false ? [] : [ONE_SIZE];
+  };
   const colorways: Colorway[] = (p.colorways ?? []).map((c) => {
     const swatch = c.swatch?.hex ?? "#0b1b2b";
     return {
@@ -54,15 +79,17 @@ function toProduct(p: SanityProduct): Product {
       gallery: (c.gallery ?? [])
         .filter((u): u is string => !!u)
         .map((u) => ({ src: `${u}?w=1600&fm=webp&q=85`, thumb: `${u}?w=240&h=240&fit=fillmax&bg=f1f4f6&fm=webp` })),
-      inStock: c.inStock ?? [],
+      inStock: stockFor(c),
     };
   });
   return {
     slug: p.slug,
+    kind: accessory ? "accessory" : "shoe",
     brand: p.brand ?? "Footworx",
     name: p.name,
-    category: p.category,
-    gender: p.gender,
+    category: accessory ? accType : p.category,
+    gender: accessory ? "Unisex" : p.gender,
+    sizes: accessory ? accessorySizeOptions[accType] : undefined,
     price: p.price,
     salePrice: p.salePrice ?? undefined,
     description: p.description ?? "",
@@ -88,10 +115,13 @@ export async function getProduct(slug: string) {
   return (await getProducts()).find((p) => p.slug === slug);
 }
 
+/** The big floating shoe on the home page: the newest featured shoe (accessories never) */
 export async function getFeatured() {
-  const all = await getProducts();
-  return all.find((p) => p.featured) ?? all[0];
+  const shoes = (await getProducts()).filter((p) => p.kind === "shoe");
+  return shoes.find((p) => p.featured) ?? shoes[0];
 }
+
+export { productHref } from "./links";
 
 export async function isSampleCatalogue() {
   return (await getProducts()) === sampleProducts;

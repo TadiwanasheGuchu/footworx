@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Product, Colorway } from "@/data/products";
+import { ONE_SIZE, type Colorway, type Product } from "@/data/products";
 import { whatsappLink } from "@/lib/site";
 
 type Props = {
@@ -12,11 +12,11 @@ type Props = {
 
 export function BuyActions({ product, colorway, size }: Props) {
   const [notice, setNotice] = useState<string | null>(null);
-  const shoe = `${product.brand} ${product.name}, ${colorway.name}`;
-  const sizeText = size ? `size ${size}` : "(size: please advise)";
+  const item = `${product.brand} ${product.name}, ${colorway.name}`;
+  const sizeText = size === ONE_SIZE ? "" : size ? `, size ${size}` : ", (size: please advise)";
 
-  const orderMsg = `Hi Footworx, I'd like to order the ${shoe}, ${sizeText}.`;
-  const collectMsg = `Hi Footworx, please reserve the ${shoe}, ${sizeText} for me to collect in store.`;
+  const orderMsg = `Hi Footworx, I'd like to order the ${item}${sizeText}.`;
+  const collectMsg = `Hi Footworx, please reserve the ${item}${sizeText} for me to collect in store.`;
 
   const needSize = (e: React.MouseEvent) => {
     if (!size) {

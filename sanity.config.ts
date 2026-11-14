@@ -12,14 +12,33 @@ export default defineConfig({
   basePath: "/studio",
   projectId,
   dataset,
-  schema: { types: schemaTypes },
+  schema: {
+    types: schemaTypes,
+    templates: (prev) => [
+      ...prev,
+      { id: "product-accessory", title: "Accessory", schemaType: "product", value: { kind: "accessory" } },
+    ],
+  },
   plugins: [
     structureTool({
       structure: (S) =>
         S.list()
           .title("Footworx")
           .items([
-            S.documentTypeListItem("product").title("Shoes"),
+            S.listItem()
+              .title("Shoes")
+              .schemaType("product")
+              .child(S.documentList().title("Shoes").filter('_type == "product" && (!defined(kind) || kind == "shoe")')),
+            S.listItem()
+              .title("Accessories")
+              .schemaType("product")
+              .child(
+                S.documentList()
+                  .title("Accessories")
+                  .filter('_type == "product" && kind == "accessory"')
+                  .initialValueTemplates([S.initialValueTemplateItem("product-accessory")]),
+              ),
+            S.documentTypeListItem("product").title("All products"),
             S.documentTypeListItem("brand").title("Brands"),
           ]),
     }),

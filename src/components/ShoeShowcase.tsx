@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import type { Product } from "@/data/products";
+import { ONE_SIZE, sizesFor, type Product } from "@/data/products";
+import { productHref } from "@/lib/links";
 import { formatPrice } from "@/lib/site";
 import { isLight } from "@/lib/color";
 import { FloatingShoe } from "./FloatingShoe";
@@ -90,8 +91,13 @@ function ShoePanel({
 
 export function ShoeShowcase({ product, variant }: Props) {
   const [colorId, setColorId] = useState(product.colorways[0].id);
-  const [size, setSize] = useState<string | null>(null);
   const colorway = product.colorways.find((c) => c.id === colorId) ?? product.colorways[0];
+  const isShoe = product.kind !== "accessory";
+  const sizes = sizesFor(product);
+  const oneSize = sizes.length === 1 && sizes[0] === ONE_SIZE;
+  // One-size items (headphones) need no size choice: pick it when in stock
+  const autoSize = (inStock: string[]) => (oneSize && inStock.includes(ONE_SIZE) ? ONE_SIZE : null);
+  const [size, setSize] = useState<string | null>(() => autoSize(product.colorways[0].inStock));
 
   // 0 = the floating shoe, 1+ = gallery photos
   const [view, setView] = useState(0);
@@ -100,7 +106,8 @@ export function ShoeShowcase({ product, variant }: Props) {
     setColorId(id);
     setView(0);
     const next = product.colorways.find((c) => c.id === id);
-    if (size && next && !next.inStock.includes(size)) setSize(null);
+    if (oneSize) setSize(next ? autoSize(next.inStock) : null);
+    else if (size && next && !next.inStock.includes(size)) setSize(null);
   };
 
   const label = `${product.brand} ${product.name}`;
@@ -118,7 +125,7 @@ export function ShoeShowcase({ product, variant }: Props) {
               <ColorwayPicker colorways={product.colorways} selectedId={colorway.id} onSelect={pickColor} />
               <div className="flex flex-wrap gap-3">
                 <Link
-                  href={`/shoes/${product.slug}`}
+                  href={productHref(product)}
                   className={`rounded-full px-7 py-3.5 font-semibold transition-colors ${
                     dark ? "bg-white text-ink hover:bg-blue-soft" : "bg-ink text-white hover:bg-[#1d3349]"
                   }`}
@@ -135,7 +142,7 @@ export function ShoeShowcase({ product, variant }: Props) {
                 </Link>
               </div>
             </div>
-            <FloatingShoe colorway={colorway} label={label} className="order-1 md:order-2" />
+            <FloatingShoe colorway={colorway} label={label} className="order-1 md:order-2" tilt={isShoe} category={product.category} />
           </div>
         </ShoePanel>
       </section>
@@ -175,7 +182,7 @@ export function ShoeShowcase({ product, variant }: Props) {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
               >
-                <FloatingShoe colorway={colorway} label={label} className="w-full" />
+                <FloatingShoe colorway={colorway} label={label} className="w-full" tilt={isShoe} category={product.category} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -183,7 +190,7 @@ export function ShoeShowcase({ product, variant }: Props) {
         {gallery.length > 0 && (
           <div className="-mx-1 flex gap-2 overflow-x-auto p-1" role="group" aria-label="Photos">
             <Thumb on={view === 0} label="Main view" onClick={() => setView(0)} bg={colorway.bg}>
-              <ShoeArt colorway={colorway} className="h-full w-full object-contain" />
+              <ShoeArt colorway={colorway} category={product.category} className="h-full w-full object-contain" />
             </Thumb>
             {gallery.map((g, i) => (
               <Thumb key={g.src} on={view === i + 1} label={`Photo ${i + 2}`} onClick={() => setView(i + 1)} bg={STUDIO_BG}>
@@ -197,17 +204,29 @@ export function ShoeShowcase({ product, variant }: Props) {
       <div className="flex flex-col gap-7 lg:py-4">
         <div className="flex flex-col gap-3">
           <span className="text-[15px] text-steel">
-            {product.brand} · {product.category} · {product.gender}
+            {[product.brand, product.category, isShoe ? product.gender : null].filter(Boolean).join(" · ")}
           </span>
           <h1 className="display text-5xl sm:text-6xl">{product.name}</h1>
           <Price product={product} />
         </div>
         <ColorwayPicker colorways={product.colorways} selectedId={colorway.id} onSelect={pickColor} />
-        <SizePicker inStock={colorway.inStock} selected={size} onSelect={setSize} />
+        {oneSize ? (
+          <p className="text-[15px] font-semibold" aria-live="polite">
+            {colorway.inStock.includes(ONE_SIZE) ? "In stock" : "Out of stock in this color"}
+          </p>
+        ) : (
+          <SizePicker
+            sizes={sizes}
+            label={isShoe ? "Select size (EU)" : "Select size"}
+            inStock={colorway.inStock}
+            selected={size}
+            onSelect={setSize}
+          />
+        )}
         <BuyActions product={product} colorway={colorway} size={size} />
         {product.description && (
           <div className="border-t border-line pt-6">
-            <h2 className="mb-2 font-semibold">About this shoe</h2>
+            <h2 className="mb-2 font-semibold">{isShoe ? "About this shoe" : "About this product"}</h2>
             <p className="text-lg leading-relaxed text-steel">{product.description}</p>
           </div>
         )}

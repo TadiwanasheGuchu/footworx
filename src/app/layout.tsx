@@ -12,10 +12,10 @@ import { isSampleCatalogue } from "@/lib/catalog";
 
 export const metadata: Metadata = {
   title: {
-    default: "Footworx Namibia | Running, football and everyday shoes",
+    default: "Footworx Namibia | Foot assessments & running shoes, Walvis Bay",
     template: "%s | Footworx Namibia",
   },
-  description: "Hoka, Joma and more in Windhoek. Order online, on WhatsApp, or collect in store.",
+  description: "Biomechanical foot assessments and running shoes in Walvis Bay: Hoka, Brooks, New Balance, Saucony, Mizuno, Salomon, Joma and Hush Puppies.",
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

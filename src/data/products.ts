@@ -45,7 +45,7 @@ export const products: Product[] = [
     price: 2999,
     isNew: true,
     description:
-      "Placeholder description. A cushioned everyday running shoe for long kilometres on Windhoek's roads.",
+      "Placeholder description. A cushioned everyday running shoe for long kilometres on Walvis Bay's roads.",
     colorways: [
       { id: "navy", name: "Navy / White", upper: "#0b1b2b", sole: "#ffffff", accent: "#ff5a1f", lace: "#ffffff", bg: "#d6efff", inStock: ["40", "41", "42", "43", "44"] },
       { id: "dune", name: "Dune Orange", upper: "#ff5a1f", sole: "#0b1b2b", accent: "#0b1b2b", lace: "#ffffff", bg: "#ffe6dc", inStock: ["39", "41", "42"] },

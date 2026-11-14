@@ -32,8 +32,8 @@ export default async function ShoePage({ params }: Params) {
 
       <section className="mx-auto grid max-w-7xl gap-4 px-4 py-14 sm:px-8 md:grid-cols-3">
         {[
-          ["Collect in store", "Reserve on WhatsApp and pick up at our Windhoek shop."],
-          ["Not sure of your size?", "Message us and we’ll help you choose, or come in and try them on."],
+          ["Collect in store", "Reserve on WhatsApp and pick up at LERA Medical Centre, Walvis Bay."],
+          ["Not sure of your size?", "Book a foot assessment, or message us and we’ll help you choose."],
           ["Pay your way", "WhatsApp orders, EFT or in store. Card payments online coming soon."],
         ].map(([title, text]) => (
           <div key={title} className="rounded-3xl bg-tile p-6">

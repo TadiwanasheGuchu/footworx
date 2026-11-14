@@ -15,11 +15,9 @@ export const site = {
   ],
   // Used for the map and "Get directions"
   mapQuery: "LERA Medical Centre, 2 Hidipo Hamutenya Drive, Walvis Bay, Namibia",
-  // TODO: confirm opening hours
   hours: [
-    { days: "Mon – Fri", time: "[09:00 – 17:00]" },
-    { days: "Saturday", time: "[09:00 – 13:00]" },
-    { days: "Sunday", time: "Closed" },
+    { days: "Mon – Fri", time: "08:00 – 17:00" },
+    { days: "Sat – Sun", time: "Closed" },
   ],
   // Brands Footworx stocks (shown on the home page even before they're in the catalogue)
   brands: ["Hoka", "Brooks", "New Balance", "Saucony", "Mizuno", "Salomon", "Joma", "Hush Puppies"],

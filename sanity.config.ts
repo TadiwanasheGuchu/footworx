@@ -14,8 +14,9 @@ export default defineConfig({
   dataset,
   schema: {
     types: schemaTypes,
+    // Only one Home page: don't offer "new Home page"
     templates: (prev) => [
-      ...prev,
+      ...prev.filter((t) => t.schemaType !== "homePage"),
       { id: "product-accessory", title: "Accessory", schemaType: "product", value: { kind: "accessory" } },
     ],
   },
@@ -25,6 +26,11 @@ export default defineConfig({
         S.list()
           .title("Footworx")
           .items([
+            S.listItem()
+              .title("Home page")
+              .schemaType("homePage")
+              .child(S.document().schemaType("homePage").documentId("homePage").title("Home page")),
+            S.divider(),
             S.listItem()
               .title("Shoes")
               .schemaType("product")

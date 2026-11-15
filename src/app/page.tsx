@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getBrandLogos, getFeatured, getProducts } from "@/lib/catalog";
+import { getBrandLogos, getFeatured, getHome, getProducts } from "@/lib/catalog";
+import { HomeBanners, HomeHeroBanner, HomeTiles } from "@/components/HomeSections";
 import { BrandMarquee } from "@/components/BrandMarquee";
 import { ShoeShowcase } from "@/components/ShoeShowcase";
 import { ProductCard } from "@/components/ProductCard";
@@ -16,7 +17,7 @@ const accessoryTiles = [
 ];
 
 export default async function Home() {
-  const [featured, products, logos] = await Promise.all([getFeatured(), getProducts(), getBrandLogos()]);
+  const [featured, products, logos, home] = await Promise.all([getFeatured(), getProducts(), getBrandLogos(), getHome()]);
   const shoes = products.filter((p) => p.kind === "shoe");
   const accessories = products.filter((p) => p.kind === "accessory");
   const newArrivals = [...shoes].sort((a, b) => Number(!!b.isNew) - Number(!!a.isNew)).slice(0, 8);
@@ -24,17 +25,23 @@ export default async function Home() {
 
   return (
     <>
+      {home.hero && <HomeHeroBanner hero={home.hero} />}
+
       <ShoeShowcase product={featured} variant="hero" />
 
-      <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-8">
-        <div className="flex flex-wrap gap-2">
-          {categories.map((c) => (
-            <Link key={c} href={`/shop?category=${c}`} className="rounded-full bg-tile px-5 py-2.5 font-medium hover:bg-ink hover:text-white">
-              {c}
-            </Link>
-          ))}
-        </div>
-      </section>
+      {home.tiles.length > 0 ? (
+        <HomeTiles tiles={home.tiles} />
+      ) : (
+        <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-8">
+          <div className="flex flex-wrap gap-2">
+            {categories.map((c) => (
+              <Link key={c} href={`/shop?category=${c}`} className="rounded-full bg-tile px-5 py-2.5 font-medium hover:bg-ink hover:text-white">
+                {c}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-8">
         <div className="mb-6 flex items-end justify-between">
@@ -47,6 +54,8 @@ export default async function Home() {
           ))}
         </div>
       </section>
+
+      {home.banners.length > 0 && <HomeBanners banners={home.banners} />}
 
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-8">
         <div className="mb-6 flex items-end justify-between">

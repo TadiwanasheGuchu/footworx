@@ -330,4 +330,104 @@ export const categoryStory = defineType({
   },
 });
 
-export const schemaTypes = [product, brand, categoryStory];
+// ---------- Home page (one document) ----------
+
+const linkField = (name: string, title: string) =>
+  defineField({
+    name,
+    title,
+    description: 'A page on the site, e.g. /shop?category=Running, /shop?brand=Joma, /gifts, /shoe-finder',
+    type: "string",
+    validation: (r) =>
+      r.custom((v) => (!v || v.startsWith("/") || v.startsWith("https://") ? true : "Start with / (a page on this site) or https://")),
+  });
+
+const photo = (name: string, title: string, description: string) =>
+  defineField({
+    name,
+    title,
+    description,
+    type: "image",
+    options: { hotspot: true },
+    fields: [defineField({ name: "alt", title: "Describe the photo", type: "string" })],
+  });
+
+export const homePage = defineType({
+  name: "homePage",
+  title: "Home page",
+  type: "document",
+  groups: [
+    { name: "hero", title: "Top banner", default: true },
+    { name: "tiles", title: "Category tiles" },
+    { name: "banners", title: "Explore banners" },
+  ],
+  fields: [
+    { ...photo("heroImage", "Top banner photo", "Full width at the very top. Landscape, at least 2400px wide. Leave empty to start with the floating shoe."), group: "hero" },
+    defineField({ name: "heroEyebrow", title: "Small line above the headline", type: "string", group: "hero" }),
+    defineField({ name: "heroHeadline", title: "Headline", description: "2 to 5 bold words", type: "string", group: "hero", validation: (r) => r.max(50) }),
+    defineField({ name: "heroText", title: "Short text", type: "string", group: "hero", validation: (r) => r.max(140) }),
+    defineField({ name: "heroButton1", title: "Main button text", type: "string", group: "hero" }),
+    { ...linkField("heroLink1", "Main button link"), group: "hero" },
+    defineField({ name: "heroButton2", title: "Second button text (optional)", type: "string", group: "hero" }),
+    { ...linkField("heroLink2", "Second button link"), group: "hero" },
+    defineField({
+      name: "tiles",
+      title: "Category tiles",
+      description: "3 or 4 photo tiles under the floating shoe, e.g. Running, Trail, Accessories, Foot assessment",
+      type: "array",
+      group: "tiles",
+      validation: (r) => r.max(4),
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "tile",
+          fields: [
+            defineField({ name: "label", title: "Label", type: "string", validation: (r) => r.required() }),
+            { ...linkField("link", "Link"), validation: (r) => r.required() },
+            photo("image", "Photo", "Portrait or square works best"),
+          ],
+          preview: { select: { title: "label", subtitle: "link", media: "image" } },
+        }),
+      ],
+    }),
+    defineField({
+      name: "banners",
+      title: "Explore banners",
+      description: "Big image banners further down the page, e.g. 'Explore Joma'. Drag to reorder.",
+      type: "array",
+      group: "banners",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "banner",
+          fields: [
+            photo("image", "Photo", "Landscape, at least 2000px wide"),
+            defineField({ name: "eyebrow", title: "Small line above the headline", type: "string" }),
+            defineField({ name: "headline", title: "Headline", type: "string", validation: (r) => r.required().max(50) }),
+            defineField({ name: "text", title: "Short text", type: "string", validation: (r) => r.max(160) }),
+            defineField({ name: "button", title: "Button text", type: "string" }),
+            linkField("link", "Button link"),
+            defineField({
+              name: "layout",
+              title: "Layout",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Full width, text on the photo", value: "full" },
+                  { title: "Photo left, text right", value: "split-left" },
+                  { title: "Photo right, text left", value: "split-right" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "full",
+            }),
+          ],
+          preview: { select: { title: "headline", subtitle: "layout", media: "image" } },
+        }),
+      ],
+    }),
+  ],
+  preview: { prepare: () => ({ title: "Home page" }) },
+});
+
+export const schemaTypes = [product, brand, categoryStory, homePage];

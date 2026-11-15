@@ -197,3 +197,102 @@ export async function getStory(page: string): Promise<Story | null> {
     return null;
   }
 }
+
+// ---------- Home page (banner, tiles, explore banners) ----------
+
+export type HomeHero = {
+  image: StoryImage;
+  eyebrow?: string;
+  headline?: string;
+  text?: string;
+  buttons: { label: string; href: string }[];
+};
+export type HomeTile = { label: string; href: string; image?: StoryImage };
+export type HomeBanner = {
+  image: StoryImage;
+  eyebrow?: string;
+  headline: string;
+  text?: string;
+  button?: { label: string; href: string };
+  layout: "full" | "split-left" | "split-right";
+};
+export type Home = { hero: HomeHero | null; tiles: HomeTile[]; banners: HomeBanner[] };
+
+type Img = SanityStoryImage;
+type SanityHome = {
+  hero: Img;
+  heroEyebrow?: string | null;
+  heroHeadline?: string | null;
+  heroText?: string | null;
+  heroButton1?: string | null;
+  heroLink1?: string | null;
+  heroButton2?: string | null;
+  heroLink2?: string | null;
+  tiles?: { label: string; link: string; image: Img }[] | null;
+  banners?: {
+    image: Img;
+    eyebrow?: string | null;
+    headline: string;
+    text?: string | null;
+    button?: string | null;
+    link?: string | null;
+    layout?: HomeBanner["layout"] | null;
+  }[] | null;
+} | null;
+
+const imgProj = (field: string) => `{ "url": ${field}.asset->url, "alt": ${field}.alt, "hotspot": ${field}.hotspot }`;
+
+/** The Home page content from Sanity; sections without photos are left out */
+export async function getHome(): Promise<Home> {
+  const empty: Home = { hero: null, tiles: [], banners: [] };
+  if (!client) return empty;
+  try {
+    const h = await client.fetch<SanityHome>(
+      `*[_id == "homePage"][0]{
+        "hero": ${imgProj("heroImage")},
+        heroEyebrow, heroHeadline, heroText, heroButton1, heroLink1, heroButton2, heroLink2,
+        tiles[]{ label, link, "image": ${imgProj("image")} },
+        banners[]{ "image": ${imgProj("image")}, eyebrow, headline, text, button, link, layout }
+      }`,
+      {},
+      { next: { revalidate: REVALIDATE } },
+    );
+    if (!h) return empty;
+    const heroImage = toImage(h.hero, 2400);
+    const buttons = [
+      [h.heroButton1, h.heroLink1],
+      [h.heroButton2, h.heroLink2],
+    ]
+      .filter(([l, href]) => l && href)
+      .map(([label, href]) => ({ label: label as string, href: href as string }));
+    return {
+      hero: heroImage
+        ? {
+            image: heroImage,
+            eyebrow: h.heroEyebrow ?? undefined,
+            headline: h.heroHeadline ?? undefined,
+            text: h.heroText ?? undefined,
+            buttons,
+          }
+        : null,
+      tiles: (h.tiles ?? []).filter((t) => t.label && t.link).map((t) => ({ label: t.label, href: t.link, image: toImage(t.image, 900) })),
+      banners: (h.banners ?? [])
+        .map((b): HomeBanner | null => {
+          const image = toImage(b.image, 2000);
+          if (!image || !b.headline) return null;
+          return {
+            image,
+            eyebrow: b.eyebrow ?? undefined,
+            headline: b.headline,
+            text: b.text ?? undefined,
+            button: b.button && b.link ? { label: b.button, href: b.link } : undefined,
+            layout: b.layout ?? "full",
+          };
+        })
+        .filter((b): b is HomeBanner => !!b),
+    };
+  } catch (err) {
+    console.error("Sanity home fetch failed", err);
+    return empty;
+  }
+}

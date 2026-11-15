@@ -56,6 +56,21 @@ export function ShoeArt({ colorway, className, label, category }: Props) {
     );
   }
 
+  if (category === "Clothing") {
+    return (
+      <svg viewBox="0 0 400 200" className={className} {...a11y}>
+        <path
+          d="M160 20 Q200 40 240 20 L300 44 L330 92 L296 108 L282 90 L282 186 L118 186 L118 90 L104 108 L70 92 L100 44 Z"
+          fill={upper}
+          stroke={outlineOf(upper)}
+          strokeWidth="2"
+        />
+        <path d="M160 20 Q200 40 240 20 Q226 46 200 46 Q174 46 160 20 Z" fill={accent} />
+        <path d="M118 150 L282 150 L282 160 L118 160 Z" fill={sole} />
+      </svg>
+    );
+  }
+
   if (category === "Headphones") {
     return (
       <svg viewBox="0 0 400 200" className={className} {...a11y}>

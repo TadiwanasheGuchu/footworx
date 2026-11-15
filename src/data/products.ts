@@ -20,7 +20,7 @@ export type Colorway = {
 };
 
 export const shoeCategories = ["Running", "Trail", "Football", "Casual"] as const;
-export const accessoryCategories = ["Insoles", "Socks", "Headphones"] as const;
+export const accessoryCategories = ["Clothing", "Insoles", "Socks", "Headphones"] as const;
 export type ShoeCategory = (typeof shoeCategories)[number];
 export type AccessoryCategory = (typeof accessoryCategories)[number];
 
@@ -53,6 +53,7 @@ export const accessorySizeOptions: Record<AccessoryCategory, string[]> = {
   Insoles: ["36-37", "38-39", "40-41", "42-43", "44-45", "46-47"],
   Socks: ["S (35-38)", "M (39-42)", "L (43-46)", "XL (47-50)"],
   Headphones: [ONE_SIZE],
+  Clothing: ["XS", "S", "M", "L", "XL", "XXL"],
 };
 
 export function sizesFor(p: Product) {

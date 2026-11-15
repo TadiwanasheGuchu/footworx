@@ -17,7 +17,7 @@ const categories = [
   { href: "/gifts", label: "Gifts" },
 ];
 
-const accessoryTypes = ["Insoles", "Socks", "Headphones"];
+const accessoryTypes = ["Clothing", "Insoles", "Socks", "Headphones"];
 
 function CategoryPills({ onPick }: { onPick?: () => void }) {
   const path = usePathname();

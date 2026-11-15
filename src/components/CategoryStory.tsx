@@ -10,6 +10,7 @@ const fallback: Record<string, { headline: string; subtitle: string; bg: string;
   Trail: { headline: "Trail running", subtitle: "Grip and protection for gravel, sand and dunes.", bg: "#2f3b2a", text: "#ffffff" },
   Football: { headline: "Football", subtitle: "Boots for firm ground and astro.", bg: "#0b1b2b", text: "#ffffff" },
   Casual: { headline: "Everyday", subtitle: "Comfortable shoes for work, errands and weekends.", bg: "#e3f4ff", text: "#0b1b2b" },
+  Clothing: { headline: "Clothing", subtitle: "Running tops, shorts and layers for the coast.", bg: "#0b1b2b", text: "#ffffff" },
   Insoles: { headline: "Insoles", subtitle: "Support and comfort, matched to your foot assessment.", bg: "#e3f4ff", text: "#0b1b2b" },
   Socks: { headline: "Socks", subtitle: "Cushioned, blister-resistant socks for every run.", bg: "#fff0e9", text: "#0b1b2b" },
   Headphones: { headline: "Headphones", subtitle: "Open-ear sport headphones: hear the road while you run.", bg: "#0b1b2b", text: "#ffffff" },

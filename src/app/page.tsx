@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getBrandLogos, getFeatured, getHome, getProducts } from "@/lib/catalog";
 import { HomeBanners, HomeHeroBanner, HomeTiles } from "@/components/HomeSections";
+import { Trending } from "@/components/Trending";
 import { BrandMarquee } from "@/components/BrandMarquee";
 import { ShoeShowcase } from "@/components/ShoeShowcase";
 import { ProductCard } from "@/components/ProductCard";
@@ -11,6 +12,7 @@ export const revalidate = 60;
 const categories = ["Running", "Trail", "Football", "Casual"];
 
 const accessoryTiles = [
+  { category: "Clothing", text: "Running tops, shorts and layers for the coast." },
   { category: "Insoles", text: "Support and comfort, matched to your foot assessment." },
   { category: "Socks", text: "Cushioned running socks that keep blisters away." },
   { category: "Headphones", text: "Shokz open-ear headphones: hear the road while you run." },
@@ -64,7 +66,7 @@ export default async function Home() {
             View all
           </Link>
         </div>
-        <div className="mb-8 grid gap-3 sm:grid-cols-3">
+        <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
           {accessoryTiles.map((t) => (
             <Link
               key={t.category}
@@ -122,6 +124,8 @@ export default async function Home() {
           }))}
         />
       </section>
+
+      <Trending cards={home.trending} products={products} />
 
       <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-8">
         <div className="grid gap-8 rounded-[2rem] bg-blue-soft p-8 sm:p-12 md:grid-cols-[1.3fr_1fr] md:items-center">

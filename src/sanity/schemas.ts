@@ -94,6 +94,15 @@ const colorway = defineArrayMember({
       hidden: ({ document }) => !accessoryIs(document as Doc, "Socks"),
     }),
     defineField({
+      name: "inStockClothing",
+      title: "Clothing sizes in stock",
+      description: "Tick every size you have in this colour",
+      type: "array",
+      of: [{ type: "string" }],
+      options: { list: accessorySizeOptions.Clothing.map((s) => ({ title: s, value: s })), layout: "grid" },
+      hidden: ({ document }) => !accessoryIs(document as Doc, "Clothing"),
+    }),
+    defineField({
       name: "inStockOneSize",
       title: "In stock",
       description: "Tick when you have this color in stock",
@@ -103,9 +112,9 @@ const colorway = defineArrayMember({
     }),
   ],
   preview: {
-    select: { title: "name", media: "image", sizes: "inStock", ins: "inStockInsoles", socks: "inStockSocks", one: "inStockOneSize" },
-    prepare: ({ title, media, sizes, ins, socks, one }) => {
-      const list: string[] = sizes?.length ? sizes : ins?.length ? ins : socks?.length ? socks : one ? ["One size"] : [];
+    select: { title: "name", media: "image", sizes: "inStock", ins: "inStockInsoles", socks: "inStockSocks", cloth: "inStockClothing", one: "inStockOneSize" },
+    prepare: ({ title, media, sizes, ins, socks, cloth, one }) => {
+      const list: string[] = sizes?.length ? sizes : ins?.length ? ins : socks?.length ? socks : cloth?.length ? cloth : one ? ["One size"] : [];
       return { title, media, subtitle: list.length ? `In stock: ${list.join(", ")}` : "Not in stock" };
     },
   },
@@ -128,7 +137,7 @@ export const product = defineType({
       options: {
         list: [
           { title: "Shoe", value: "shoe" },
-          { title: "Accessory (insoles, socks, headphones)", value: "accessory" },
+          { title: "Accessory or clothing (insoles, socks, headphones, clothing)", value: "accessory" },
         ],
         layout: "radio",
         direction: "horizontal",
@@ -360,6 +369,7 @@ export const homePage = defineType({
     { name: "hero", title: "Top banner", default: true },
     { name: "tiles", title: "Category tiles" },
     { name: "banners", title: "Explore banners" },
+    { name: "trending", title: "Trending" },
   ],
   fields: [
     { ...photo("heroImage", "Top banner photo", "Full width at the very top. Landscape, at least 2400px wide. Leave empty to start with the floating shoe."), group: "hero" },
@@ -423,6 +433,27 @@ export const homePage = defineType({
             }),
           ],
           preview: { select: { title: "headline", subtitle: "layout", media: "image" } },
+        }),
+      ],
+    }),
+    defineField({
+      name: "trending",
+      title: "Trending cards",
+      description: "Small cards that scroll sideways after 'Brands we stock'. Leave empty to show new and featured products automatically.",
+      type: "array",
+      group: "trending",
+      validation: (r) => r.max(12),
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "trendingCard",
+          fields: [
+            defineField({ name: "title", title: "Title", type: "string", validation: (r) => r.required().max(40) }),
+            defineField({ name: "subtitle", title: "Small line (optional)", type: "string", validation: (r) => r.max(40) }),
+            { ...linkField("link", "Link"), validation: (r) => r.required() },
+            photo("image", "Photo", "Square or portrait"),
+          ],
+          preview: { select: { title: "title", subtitle: "link", media: "image" } },
         }),
       ],
     }),

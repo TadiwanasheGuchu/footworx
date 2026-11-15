@@ -41,6 +41,7 @@ type SanityProduct = {
     inStock?: string[] | null;
     inStockInsoles?: string[] | null;
     inStockSocks?: string[] | null;
+    inStockClothing?: string[] | null;
     inStockOneSize?: boolean | null;
   }[] | null;
 };
@@ -55,7 +56,7 @@ const query = `*[_type == "product" && defined(slug.current) && count(colorways)
   name, category, gender, price, salePrice, description, isNew, featured,
   colorways[]{
     _key, name, "imageUrl": image.asset->url, "gallery": gallery[].asset->url, swatch, background,
-    inStock, inStockInsoles, inStockSocks, inStockOneSize
+    inStock, inStockInsoles, inStockSocks, inStockClothing, inStockOneSize
   }
 }`;
 
@@ -67,6 +68,7 @@ function toProduct(p: SanityProduct): Product {
     if (!accessory) return c.inStock ?? [];
     if (accType === "Insoles") return c.inStockInsoles ?? [];
     if (accType === "Socks") return c.inStockSocks ?? [];
+    if (accType === "Clothing") return c.inStockClothing ?? [];
     return c.inStockOneSize === false ? [] : [ONE_SIZE];
   };
   const colorways: Colorway[] = (p.colorways ?? []).map((c) => {
@@ -216,7 +218,8 @@ export type HomeBanner = {
   button?: { label: string; href: string };
   layout: "full" | "split-left" | "split-right";
 };
-export type Home = { hero: HomeHero | null; tiles: HomeTile[]; banners: HomeBanner[] };
+export type TrendingCard = { title: string; subtitle?: string; href: string; image?: StoryImage };
+export type Home = { hero: HomeHero | null; tiles: HomeTile[]; banners: HomeBanner[]; trending: TrendingCard[] };
 
 type Img = SanityStoryImage;
 type SanityHome = {
@@ -238,13 +241,14 @@ type SanityHome = {
     link?: string | null;
     layout?: HomeBanner["layout"] | null;
   }[] | null;
+  trending?: { title: string; subtitle?: string | null; link: string; image: Img }[] | null;
 } | null;
 
 const imgProj = (field: string) => `{ "url": ${field}.asset->url, "alt": ${field}.alt, "hotspot": ${field}.hotspot }`;
 
 /** The Home page content from Sanity; sections without photos are left out */
 export async function getHome(): Promise<Home> {
-  const empty: Home = { hero: null, tiles: [], banners: [] };
+  const empty: Home = { hero: null, tiles: [], banners: [], trending: [] };
   if (!client) return empty;
   try {
     const h = await client.fetch<SanityHome>(
@@ -252,7 +256,8 @@ export async function getHome(): Promise<Home> {
         "hero": ${imgProj("heroImage")},
         heroEyebrow, heroHeadline, heroText, heroButton1, heroLink1, heroButton2, heroLink2,
         tiles[]{ label, link, "image": ${imgProj("image")} },
-        banners[]{ "image": ${imgProj("image")}, eyebrow, headline, text, button, link, layout }
+        banners[]{ "image": ${imgProj("image")}, eyebrow, headline, text, button, link, layout },
+        trending[]{ title, subtitle, link, "image": ${imgProj("image")} }
       }`,
       {},
       { next: { revalidate: REVALIDATE } },
@@ -290,6 +295,9 @@ export async function getHome(): Promise<Home> {
           };
         })
         .filter((b): b is HomeBanner => !!b),
+      trending: (h.trending ?? [])
+        .filter((t) => t.title && t.link)
+        .map((t) => ({ title: t.title, subtitle: t.subtitle ?? undefined, href: t.link, image: toImage(t.image, 700) })),
     };
   } catch (err) {
     console.error("Sanity home fetch failed", err);

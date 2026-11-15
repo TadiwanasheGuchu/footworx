@@ -75,6 +75,7 @@ function DoneInner() {
       {order.status === "awaiting-eft" && (
         <section className="mb-8 rounded-3xl bg-tile p-6">
           <h2 className="mb-3 text-xl font-semibold">Pay by EFT</h2>
+          {payments.eft.accountNumber ? (
           <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1">
             <dt className="text-steel">Bank</dt><dd className="font-medium">{payments.eft.bank}</dd>
             <dt className="text-steel">Account name</dt><dd className="font-medium">{payments.eft.accountName}</dd>
@@ -83,6 +84,12 @@ function DoneInner() {
             <dt className="text-steel">Reference</dt><dd className="font-bold">{order.id}</dd>
             <dt className="text-steel">Amount</dt><dd className="font-bold">{formatPrice(order.subtotal)}</dd>
           </dl>
+          ) : (
+            <p>
+              Tap <strong>Send this order to Footworx on WhatsApp</strong> below and we’ll reply with our bank details. Please
+              use <strong>{order.id}</strong> as your payment reference. Amount: <strong>{formatPrice(order.subtotal)}</strong>.
+            </p>
+          )}
           <p className="mt-3 text-sm text-steel">Send your proof of payment on WhatsApp and we’ll get your order ready.</p>
         </section>
       )}

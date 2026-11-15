@@ -159,7 +159,7 @@ export default function CheckoutPage() {
               checked={payment === "eft"}
               onChange={(v) => setPayment(v as Order["payment"])}
               title="EFT / bank transfer"
-              text="We'll show our bank details. Send proof of payment on WhatsApp."
+              text="Pay by bank transfer and send proof of payment on WhatsApp."
             />
             {fulfilment === "collect" && (
               <Choice

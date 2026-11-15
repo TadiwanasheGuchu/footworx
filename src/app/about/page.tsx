@@ -13,7 +13,7 @@ export default function AboutPage() {
           Footworx is a specialist running and footwear shop at {site.addressLines[0]} in Walvis Bay. We start with your feet:
           a biomechanical foot assessment shows how you stand, walk and run, so we can recommend shoes and insoles that suit you.
         </p>
-        <p>[Your story: when Footworx started, who runs it, and what makes your service different.]</p>
+        <p>Every customer gets honest, personal advice from people who understand feet and running, whether you’re training for a race, starting out, or on your feet all day at work.</p>
       </InfoSection>
       <InfoSection title="Brands we stock">
         <p>{site.brands.join(", ")}.</p>

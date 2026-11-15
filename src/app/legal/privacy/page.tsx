@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Privacy Policy" };
 
 export default function PrivacyPage() {
   return (
-    <InfoPage title="Privacy Policy" intro="What information we collect, why, and what we do with it." updated="[date]" draft>
+    <InfoPage title="Privacy Policy" intro="What information we collect, why, and what we do with it." updated="15 November 2026">
       <InfoSection title="Who we are">
         <p>
           Footworx Namibia, {site.addressLines.join(", ")}. Contact us about privacy at{" "}
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
       <InfoSection title="Who we share it with">
         <p>We don’t sell your information. We only share what’s needed with services that help us run the shop:</p>
         <ul>
-          <li><strong>Our payment provider</strong> [PayToday / DPO Pay], to process card payments.</li>
+          <li><strong>Our payment provider</strong>, to process card payments once online payments are available.</li>
           <li><strong>WhatsApp</strong> (Meta), when you message us.</li>
           <li><strong>Netlify</strong>, which hosts this website, and <strong>Sanity</strong>, where our product information is stored.</li>
           <li><strong>Google Maps</strong>, shown on our Visit us page; Google may receive your IP address when the map loads.</li>
@@ -45,10 +45,10 @@ export default function PrivacyPage() {
         <p>Some of these services store data outside Namibia.</p>
       </InfoSection>
       <InfoSection title="How long we keep it">
-        <p>[How long order records and assessment notes are kept, e.g. order records for 5 years for tax purposes.]</p>
+        <p>We keep order records for as long as the law requires for tax and accounting, and other information only as long as we need it to help you.</p>
       </InfoSection>
       <InfoSection title="Your choices">
-        <p>You can ask to see, correct or delete the information we hold about you, or stop marketing messages, by contacting us. [Confirm with legal adviser against applicable Namibian law.]</p>
+        <p>You can ask to see, correct or delete the information we hold about you, or stop marketing messages, by contacting us.</p>
       </InfoSection>
     </InfoPage>
   );

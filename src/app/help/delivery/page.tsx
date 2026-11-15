@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Delivery & collection" };
 
 export default function DeliveryPage() {
   return (
-    <InfoPage title="Delivery & collection" intro="Collect from our shop in Walvis Bay, or have your order delivered." draft>
+    <InfoPage title="Delivery & collection" intro="Collect from our shop in Walvis Bay, or have your order delivered.">
       <InfoSection title="Collect in store (free)">
         <p>Choose “Collect in store” at checkout. We’ll WhatsApp you on the number you give us when your order is ready.</p>
         <p>
@@ -16,13 +16,15 @@ export default function DeliveryPage() {
         <p>
           <strong>When:</strong> {site.hours.map((h) => `${h.days} ${h.time}`).join(", ")}.
         </p>
-        <p>Please bring your order number. We keep orders for collection for [7] days.</p>
+        <p>Please bring your order number. We keep orders for collection for {payments.collectionDays} days.</p>
       </InfoSection>
       <InfoSection title="Delivery">
         <p>{payments.deliveryNote}</p>
         <ul>
-          <li>[Delivery areas and prices, e.g. Walvis Bay N$ [ ], Swakopmund N$ [ ], rest of Namibia by courier N$ [ ]]</li>
-          <li>[How long delivery takes, e.g. 1 to 2 working days in Walvis Bay and Swakopmund]</li>
+          <li><strong>Walvis Bay and Swakopmund:</strong> local delivery, usually within 1 to 2 working days.</li>
+          <li><strong>Rest of Namibia:</strong> by courier, usually within 2 to 5 working days.</li>
+          <li><strong>Cost:</strong> depends on where you are. We confirm it on WhatsApp before we send your order, so there are no surprises.</li>
+          <li>Orders are sent once payment is received.</li>
         </ul>
       </InfoSection>
       <InfoSection title="Questions?">

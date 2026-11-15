@@ -28,15 +28,19 @@ export const site = {
 export const payments = {
   mode: "demo" as "demo" | "live",
   provider: "PayToday / DPO Pay",
-  // TODO: real bank details for EFT orders
+  // EFT: bank details are sent on WhatsApp until they are added here.
+  // To show them on the order page, fill in all four values.
   eft: {
-    bank: "[Bank name]",
+    bank: "",
     accountName: "Footworx Namibia",
-    accountNumber: "[Account number]",
-    branchCode: "[Branch code]",
+    accountNumber: "",
+    branchCode: "",
   },
-  // TODO: confirm delivery options and price
-  deliveryNote: "Delivery in Walvis Bay and Swakopmund. We'll confirm the cost on WhatsApp.",
+  deliveryNote:
+    "Delivery in Walvis Bay and Swakopmund in 1 to 2 working days, and courier to the rest of Namibia in 2 to 5 working days. We confirm the cost on WhatsApp before sending.",
+  returnsSummary:
+    "Unworn items in their original box can be exchanged, or returned for store credit, within 14 days with proof of purchase. Faulty items are repaired, replaced or refunded.",
+  collectionDays: 7,
 };
 
 export const shortAddress = "LERA Medical Centre, Hermes, Walvis Bay";

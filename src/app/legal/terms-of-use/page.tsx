@@ -6,9 +6,9 @@ export const metadata: Metadata = { title: "Terms of Use" };
 
 export default function TermsOfUsePage() {
   return (
-    <InfoPage title="Terms of Use" intro="The rules for using this website." updated="[date]" draft>
+    <InfoPage title="Terms of Use" intro="The rules for using this website." updated="15 November 2026">
       <InfoSection title="Using this site">
-        <p>By using footworx.netlify.app [or your own domain] you agree to these terms. Buying from us is covered by our <Link href="/legal/terms-of-sale">Terms of Sale</Link>.</p>
+        <p>By using this website you agree to these terms. Buying from us is covered by our <Link href="/legal/terms-of-sale">Terms of Sale</Link>.</p>
       </InfoSection>
       <InfoSection title="Information on the site">
         <p>We try to keep product details, prices and stock accurate, but mistakes can happen and stock changes quickly. Product colours can look slightly different on different screens.</p>

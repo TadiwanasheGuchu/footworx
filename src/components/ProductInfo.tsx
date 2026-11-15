@@ -1,4 +1,5 @@
 import type { Product } from "@/data/products";
+import Link from "next/link";
 import { payments, shortAddress } from "@/lib/site";
 
 function Section({ title, open, children }: { title: string; open?: boolean; children: React.ReactNode }) {
@@ -20,7 +21,7 @@ function Section({ title, open, children }: { title: string; open?: boolean; chi
           <path d="M6 9l6 6 6-6" />
         </svg>
       </summary>
-      <div className="flex flex-col gap-3 pb-6 text-steel">{children}</div>
+      <div className="flex flex-col gap-3 pb-6 text-steel [&_a]:font-semibold [&_a]:text-ink [&_a]:underline">{children}</div>
     </details>
   );
 }
@@ -59,8 +60,10 @@ export function ProductInfo({ product }: { product: Product }) {
         </p>
       </Section>
       <Section title="Returns & exchanges">
-        {/* TODO: replace with Footworx's real returns policy */}
-        <p>[Returns policy to be confirmed: how many days, unworn condition, receipt needed, refund or exchange.]</p>
+        <p>{payments.returnsSummary}</p>
+        <p>
+          <Link href="/help/returns">Full returns & exchanges policy</Link>
+        </p>
         <p>Questions about fit? Message us on WhatsApp before you buy, or book a foot assessment.</p>
       </Section>
     </div>

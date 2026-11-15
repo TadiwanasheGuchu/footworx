@@ -11,7 +11,7 @@ export function ColorwayPicker({ colorways, selectedId, onSelect }: Props) {
   return (
     <fieldset className="flex flex-col">
       <legend className="mb-3 text-[15px] font-semibold">
-        Color: <span className="font-normal">{selected?.name}</span>
+        Colour: <span className="font-normal">{selected?.name}</span>
       </legend>
       <div className="flex flex-wrap gap-3">
         {colorways.map((c) => {

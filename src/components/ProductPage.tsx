@@ -36,6 +36,16 @@ export async function ProductPage({ kind, params }: { kind: Kind } & SlugParams)
     .filter((p) => p.slug !== product.slug && p.kind === product.kind && (p.brand === product.brand || p.category === product.category))
     .slice(0, 4);
 
+  // Shoes: suggest socks and insoles to go with them
+  const order = ["Socks", "Insoles", "Headphones"];
+  const lookItems =
+    kind === "shoe"
+      ? all
+          .filter((p) => p.kind === "accessory")
+          .sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category))
+          .slice(0, 4)
+      : [];
+
   const info =
     kind === "shoe"
       ? [
@@ -61,6 +71,20 @@ export async function ProductPage({ kind, params }: { kind: Kind } & SlugParams)
           </div>
         ))}
       </section>
+
+      {lookItems.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pb-14 sm:px-8">
+          <div className="rounded-[2rem] bg-tile p-6 sm:p-10">
+            <h2 className="mb-1 text-3xl font-bold tracking-tight">Complete the look</h2>
+            <p className="mb-6 text-steel">Good socks and the right insole make a good shoe even better.</p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
+              {lookItems.map((p) => (
+                <ProductCard key={p.slug} product={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-8">

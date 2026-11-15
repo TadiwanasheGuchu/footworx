@@ -12,6 +12,9 @@ import { ColorwayPicker } from "./ColorwayPicker";
 import { SizePicker } from "./SizePicker";
 import { BuyActions } from "./BuyActions";
 import { ShoeArt } from "./ShoeArt";
+import { SizeGuide } from "./SizeGuide";
+import { ProductInfo } from "./ProductInfo";
+import { whatsappLink } from "@/lib/site";
 
 type Props = {
   product: Product;
@@ -102,9 +105,13 @@ export function ShoeShowcase({ product, variant }: Props) {
   // 0 = the floating shoe, 1+ = gallery photos
   const [view, setView] = useState(0);
 
+  // A sold-out size the customer tapped, to offer "notify me"
+  const [soldOut, setSoldOut] = useState<string | null>(null);
+
   const pickColor = (id: string) => {
     setColorId(id);
     setView(0);
+    setSoldOut(null);
     const next = product.colorways.find((c) => c.id === id);
     if (oneSize) setSize(next ? autoSize(next.inStock) : null);
     else if (size && next && !next.inStock.includes(size)) setSize(null);
@@ -212,7 +219,7 @@ export function ShoeShowcase({ product, variant }: Props) {
         <ColorwayPicker colorways={product.colorways} selectedId={colorway.id} onSelect={pickColor} />
         {oneSize ? (
           <p className="text-[15px] font-semibold" aria-live="polite">
-            {colorway.inStock.includes(ONE_SIZE) ? "In stock" : "Out of stock in this color"}
+            {colorway.inStock.includes(ONE_SIZE) ? "In stock" : "Out of stock in this colour"}
           </p>
         ) : (
           <SizePicker
@@ -220,16 +227,33 @@ export function ShoeShowcase({ product, variant }: Props) {
             label={isShoe ? "Select size (EU)" : "Select size"}
             inStock={colorway.inStock}
             selected={size}
-            onSelect={setSize}
+            onSelect={(s) => {
+              setSize(s);
+              setSoldOut(null);
+            }}
+            onSoldOut={setSoldOut}
+            extra={isShoe ? <SizeGuide /> : undefined}
           />
         )}
-        <BuyActions product={product} colorway={colorway} size={size} />
-        {product.description && (
-          <div className="border-t border-line pt-6">
-            <h2 className="mb-2 font-semibold">{isShoe ? "About this shoe" : "About this product"}</h2>
-            <p className="text-lg leading-relaxed text-steel">{product.description}</p>
+        {soldOut && (
+          <div className="-mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-tile px-5 py-4" role="status">
+            <span>
+              Size <strong>{soldOut}</strong> is sold out in {colorway.name}.
+            </span>
+            <a
+              href={whatsappLink(
+                `Hi Footworx, please let me know when the ${label} in ${colorway.name}, size ${soldOut} is back in stock.`,
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-[#1d3349]"
+            >
+              Notify me on WhatsApp
+            </a>
           </div>
         )}
+        <BuyActions product={product} colorway={colorway} size={size} />
+        <ProductInfo product={product} />
       </div>
     </section>
   );

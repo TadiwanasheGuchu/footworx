@@ -56,6 +56,22 @@ function CategoryPills({ onPick }: { onPick?: () => void }) {
   );
 }
 
+function SearchLink({ onClick }: { onClick?: () => void }) {
+  return (
+    <Link
+      href="/search"
+      onClick={onClick}
+      aria-label="Search"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full hover:bg-tile"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+        <circle cx="11" cy="11" r="7" />
+        <path d="M20 20l-4-4" />
+      </svg>
+    </Link>
+  );
+}
+
 export function Header() {
   const [open, setOpen] = useState(false);
   return (
@@ -87,9 +103,11 @@ export function Header() {
           >
             WhatsApp us
           </a>
+          <SearchLink />
           <CartButton />
         </div>
         <div className="flex items-center gap-1 md:hidden">
+        <SearchLink onClick={() => setOpen(false)} />
         <CartButton onClick={() => setOpen(false)} />
         <button
           type="button"

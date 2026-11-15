@@ -9,7 +9,7 @@ import { accessoryCategories, accessorySizeOptions, allSizes, ONE_SIZE, shoeCate
 export const metadata: Metadata = { title: "Shop shoes & accessories" };
 
 type Kind = Product["kind"];
-type Query = { kind?: string; brand?: string; category?: string; sort?: string; size?: string };
+type Query = { kind?: string; brand?: string; category?: string; sort?: string; size?: string; sale?: string };
 type Sort = "new" | "price-asc" | "price-desc";
 type Search = { searchParams: Promise<Query> };
 
@@ -28,6 +28,7 @@ export default async function ShopPage({ searchParams }: Search) {
         ? q.kind
         : undefined;
   const brand = q.brand;
+  const sale = q.sale === "1";
   const sort: Sort = q.sort === "price-asc" || q.sort === "price-desc" ? q.sort : "new";
   // Size filter: EU sizes for shoes, the accessory's own sizes for insoles and socks
   const sizeOptions =
@@ -46,7 +47,8 @@ export default async function ShopPage({ searchParams }: Search) {
     (p) =>
       (!brand || p.brand === brand) &&
       (!category || p.category === category) &&
-      (!size || p.colorways.some((c) => c.inStock.includes(size))),
+      (!size || p.colorways.some((c) => c.inStock.includes(size))) &&
+      (!sale || (!!p.salePrice && p.salePrice < p.price)),
   );
   const price = (p: Product) => p.salePrice ?? p.price;
   if (sort === "price-asc") list.sort((a, b) => price(a) - price(b));
@@ -65,6 +67,7 @@ export default async function ShopPage({ searchParams }: Search) {
     if (nextSort && nextSort !== "new") sp.set("sort", nextSort);
     const nextSize = "size" in next ? next.size : keep.size ? size : undefined;
     if (nextSize) sp.set("size", nextSize);
+    if (sale) sp.set("sale", "1");
     const s = sp.toString();
     return s ? `/shop?${s}` : "/shop";
   };
@@ -73,7 +76,8 @@ export default async function ShopPage({ searchParams }: Search) {
     `rounded-full px-4 py-2 text-[15px] font-medium transition-colors ${active ? "bg-ink text-white" : "bg-tile hover:bg-[#e3e8ec]"}`;
 
   const kindLabel = kind === "accessory" ? "Accessories" : kind === "shoe" ? "Shoes" : "Shop all";
-  const title = [brand, category ?? (kind ? kindLabel : null)].filter(Boolean).join(" ") || kindLabel;
+  const title =
+    [sale ? "Sale:" : null, brand, category ?? (kind ? kindLabel : sale ? "everything" : null)].filter(Boolean).join(" ") || kindLabel;
   const noun = kind === "shoe" ? ["shoe", "shoes"] : ["product", "products"];
   const types = kind === "accessory" ? accessoryCategories : kind === "shoe" ? shoeCategories : [];
 
@@ -113,7 +117,7 @@ export default async function ShopPage({ searchParams }: Search) {
 
       <div className="mb-10 flex flex-col gap-3">
         <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Shoes or accessories">
-          <Link href="/shop" className={pill(!kind)}>Everything</Link>
+          <Link href={sale ? "/shop?sale=1" : "/shop"} className={pill(!kind)}>Everything</Link>
           <Link href={href({ kind: "shoe" })} className={pill(kind === "shoe")}>Shoes</Link>
           <Link href={href({ kind: "accessory" })} className={pill(kind === "accessory")}>Accessories</Link>
         </div>

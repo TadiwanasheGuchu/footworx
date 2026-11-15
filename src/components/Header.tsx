@@ -14,6 +14,7 @@ const categories = [
   { href: "/shop?category=Football", label: "Football" },
   { href: "/shop?category=Casual", label: "Casual" },
   { href: "/shop?kind=accessory", label: "Accessories" },
+  { href: "/gifts", label: "Gifts" },
 ];
 
 const accessoryTypes = ["Insoles", "Socks", "Headphones"];
@@ -23,7 +24,9 @@ function CategoryPills({ onPick }: { onPick?: () => void }) {
   const params = useSearchParams();
   const cat = params.get("category");
   const current =
-    path.startsWith("/accessories/")
+    path === "/gifts"
+      ? "/gifts"
+      : path.startsWith("/accessories/")
       ? "/shop?kind=accessory"
       : path !== "/shop"
         ? null

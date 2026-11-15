@@ -439,19 +439,18 @@ export const homePage = defineType({
     defineField({
       name: "trending",
       title: "Trending cards",
-      description: "Small cards that scroll sideways after 'Brands we stock'. Leave empty to show new and featured products automatically.",
+      description: "Small pictures with a name under the big TRENDING heading. Use transparent cut-out photos (PNG/WebP) for the cleanest look. Leave empty to show featured and new products automatically.",
       type: "array",
       group: "trending",
-      validation: (r) => r.max(12),
+      validation: (r) => r.max(16),
       of: [
         defineArrayMember({
           type: "object",
           name: "trendingCard",
           fields: [
-            defineField({ name: "title", title: "Title", type: "string", validation: (r) => r.required().max(40) }),
-            defineField({ name: "subtitle", title: "Small line (optional)", type: "string", validation: (r) => r.max(40) }),
+            defineField({ name: "title", title: "Name", description: "Short, e.g. 'Arahi 9' or 'Running socks'", type: "string", validation: (r) => r.required().max(28) }),
             { ...linkField("link", "Link"), validation: (r) => r.required() },
-            photo("image", "Photo", "Square or portrait"),
+            photo("image", "Picture", "A transparent cut-out of the product works best"),
           ],
           preview: { select: { title: "title", subtitle: "link", media: "image" } },
         }),

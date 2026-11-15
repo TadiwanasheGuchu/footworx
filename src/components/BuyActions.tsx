@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+import { useCart } from "@/lib/cart";
 import { ONE_SIZE, type Colorway, type Product } from "@/data/products";
 import { whatsappLink } from "@/lib/site";
 
@@ -12,6 +14,8 @@ type Props = {
 
 export function BuyActions({ product, colorway, size }: Props) {
   const [notice, setNotice] = useState<string | null>(null);
+  const [added, setAdded] = useState(false);
+  const { add } = useCart();
   const item = `${product.brand} ${product.name}, ${colorway.name}`;
   const sizeText = size === ONE_SIZE ? "" : size ? `, size ${size}` : ", (size: please advise)";
 
@@ -35,12 +39,22 @@ export function BuyActions({ product, colorway, size }: Props) {
       <button
         type="button"
         onClick={(e) => {
-          if (!needSize(e)) setNotice("Online payment is coming soon. For now, order on WhatsApp or collect in store.");
+          if (needSize(e) || !size) return;
+          add(product, colorway, size);
+          setAdded(true);
         }}
         className={`${pill} cursor-pointer bg-ink text-white hover:bg-[#1d3349]`}
       >
-        Buy now
+        Add to cart
       </button>
+      {added && (
+        <div className="flex items-center justify-between gap-3 rounded-2xl bg-blue-soft px-5 py-3" role="status">
+          <span className="font-medium">Added to your cart</span>
+          <Link href="/cart" className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-[#1d3349]">
+            View cart & pay
+          </Link>
+        </div>
+      )}
       <a
         href={whatsappLink(orderMsg)}
         target="_blank"

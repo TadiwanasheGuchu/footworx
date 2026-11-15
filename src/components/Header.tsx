@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { Logo } from "./Logo";
+import { CartButton } from "./CartButton";
 import { whatsappLink } from "@/lib/site";
 
 const categories = [
@@ -43,7 +44,7 @@ function CategoryPills({ onPick }: { onPick?: () => void }) {
             href={c.href}
             onClick={onPick}
             aria-current={on ? "page" : undefined}
-            className={`rounded-full px-4 py-2 text-[15px] font-medium transition-colors ${
+            className={`whitespace-nowrap rounded-full px-3.5 py-2 text-[15px] font-medium transition-colors ${
               on ? "bg-ink text-white" : "text-ink hover:bg-tile"
             }`}
           >
@@ -63,33 +64,36 @@ export function Header() {
         <Link href="/" aria-label="Footworx home" onClick={() => setOpen(false)}>
           <Logo priority height={52} />
         </Link>
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Categories">
+        <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Categories">
           <Suspense>
             <CategoryPills />
           </Suspense>
         </nav>
-        <div className="hidden items-center gap-2 md:flex">
-          <Link href="/shoe-finder" className="rounded-full px-4 py-2 text-[15px] font-medium hover:bg-tile">
+        <div className="hidden shrink-0 items-center gap-1 md:flex">
+          <Link href="/shoe-finder" className="whitespace-nowrap rounded-full px-3.5 py-2 text-[15px] font-medium hover:bg-tile">
             Shoe Finder
           </Link>
-          <Link href="/store#assessment" className="rounded-full px-4 py-2 text-[15px] font-medium hover:bg-tile">
+          <Link href="/store#assessment" className="whitespace-nowrap rounded-full px-3.5 py-2 text-[15px] font-medium hover:bg-tile">
             Foot assessment
           </Link>
-          <Link href="/store" className="rounded-full px-4 py-2 text-[15px] font-medium hover:bg-tile">
+          <Link href="/store" className="hidden whitespace-nowrap rounded-full px-3.5 py-2 text-[15px] font-medium hover:bg-tile 2xl:block">
             Visit us
           </Link>
           <a
             href={whatsappLink("Hi Footworx, I have a question.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-ink px-5 py-2.5 text-[15px] font-semibold text-white hover:bg-blue hover:text-ink"
+            className="ml-1 whitespace-nowrap rounded-full bg-ink px-5 py-2.5 text-[15px] font-semibold text-white hover:bg-blue hover:text-ink"
           >
             WhatsApp us
           </a>
+          <CartButton />
         </div>
+        <div className="flex items-center gap-1 md:hidden">
+        <CartButton onClick={() => setOpen(false)} />
         <button
           type="button"
-          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full hover:bg-tile md:hidden"
+          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full hover:bg-tile"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -99,8 +103,9 @@ export function Header() {
             {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
           </svg>
         </button>
+        </div>
       </div>
-      <nav className="hidden gap-1 overflow-x-auto px-4 pb-3 sm:px-8 md:flex lg:hidden" aria-label="Categories">
+      <nav className="mx-auto hidden max-w-7xl gap-1 overflow-x-auto px-4 pb-3 sm:px-8 md:flex xl:hidden" aria-label="Categories">
         <Suspense>
           <CategoryPills />
         </Suspense>
